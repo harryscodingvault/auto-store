@@ -24,6 +24,12 @@ export const Wrapper = styled.div`
     flex: 1;
     transition: 0.1s ease;
     color: var(--secondary-500);
+    :nth-child(1) {
+      border-left: 5px solid var(--secondary-500);
+    }
+    :nth-child(3) {
+      border-right: 5px solid var(--secondary-500);
+    }
     &:hover {
       border-bottom: 5px solid var(--secondary-900);
       border-top: 5px solid var(--secondary-500);
