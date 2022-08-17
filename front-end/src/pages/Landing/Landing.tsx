@@ -20,7 +20,7 @@ const Landing = () => {
           <span>_</span>Share it and vote!
         </li>
       </ul>
-      <div className="btn" onClick={() => navigate("login")}>
+      <div className="btn" onClick={() => navigate("signin")}>
         <h5>Login/Register</h5>
       </div>
       <div className="btn">
