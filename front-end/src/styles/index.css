@@ -76,15 +76,15 @@ ul {
 
 .btn:hover {
   color: var(--grey-900);
-  border: 0.2rem solid var(--orange-dark);
+  border: 0.2rem solid var(--red-dark);
 }
 
 .btn:hover > h5 {
-  color: var(--orange-dark);
+  color: var(--red-dark);
 }
 
 .btn:active {
-  background-color: var(--orange-dark);
+  background-color: var(--red-dark);
   border: 0.2rem solid var(--grey-900);
   color: var(--grey-50);
 }

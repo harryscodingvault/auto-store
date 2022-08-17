@@ -4,10 +4,10 @@ import { Wrapper } from "./Header.style";
 import { NavLink } from "react-router-dom";
 
 const Header = () => {
-  const user = true;
+  const user = false;
   return (
     <Wrapper>
-      {user ? (
+      {user && (
         <>
           <NavLink
             to="profile"
@@ -24,15 +24,6 @@ const Header = () => {
           <div className="nav nav-logout">
             <h5>Logout</h5>
           </div>
-        </>
-      ) : (
-        <>
-          <NavLink
-            to="login"
-            className={({ isActive }) => (isActive ? "nav active-nav" : "nav")}
-          >
-            <h5>SignIn</h5>
-          </NavLink>
         </>
       )}
     </Wrapper>
