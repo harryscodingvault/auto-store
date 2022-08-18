@@ -4,7 +4,7 @@ import { Wrapper } from "./Header.style";
 import { NavLink } from "react-router-dom";
 
 const Header = () => {
-  const user = false;
+  const user = true;
   return (
     <Wrapper>
       {user && (

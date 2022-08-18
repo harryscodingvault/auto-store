@@ -97,13 +97,6 @@ ul {
 }
 
 /* form */
-.form {
-  width: 100%;
-  max-width: var(--fixed-width);
-  padding: 2rem 2.5rem;
-  margin: 3rem auto;
-  transition: var(--transition);
-}
 
 .form-label {
   display: block;
@@ -116,7 +109,6 @@ ul {
 .form-input,
 .form-textarea,
 .form-select {
-  width: 100%;
   border-radius: 0;
   padding: 0.375rem 0.75rem;
   background-color: var(--backgroundColor);
@@ -163,13 +155,14 @@ ul {
   border-color: transparent;
   color: var(--grey-100);
   width: 90%;
+  margin: auto;
 }
 .alert-danger {
   border-top: 3px solid var(--red-dark);
   border-bottom: 3px solid var(--red-dark);
   border-right: 3px solid var(--red-dark);
   border-left: 15px solid var(--red-dark);
-  background: var(--primary-200);
+  background: var(--primary-900);
   color: var(--red-dark);
 }
 
