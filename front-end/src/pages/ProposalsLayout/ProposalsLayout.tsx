@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
-import { Wrapper } from "../../components/Register/Register.style";
+import { Wrapper } from "./ProposalsLayout.style";
 
 const Proposals = () => {
   return (

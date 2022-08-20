@@ -14,10 +14,10 @@ export const Wrapper = styled.div`
   -webkit-user-select: none;
   -ms-user-select: none;
   .nav {
-    border-top: 5px solid var(--secondary-500);
-    border-bottom: 5px solid var(--secondary-500);
-    border-left: 2.5px solid var(--secondary-500);
-    border-right: 2.5px solid var(--secondary-500);
+    border-top: 1px solid var(--secondary-500);
+    border-bottom: 1px solid var(--secondary-500);
+    border-left: 0.5px solid var(--secondary-500);
+    border-right: 0.5px solid var(--secondary-500);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -26,10 +26,10 @@ export const Wrapper = styled.div`
     color: var(--secondary-500);
     padding: 0.1rem;
     :nth-child(1) {
-      border-left: 5px solid var(--secondary-500);
+      border-left: 1px solid var(--secondary-500);
     }
     :nth-child(3) {
-      border-right: 5px solid var(--secondary-500);
+      border-right: 1px solid var(--secondary-500);
     }
     &:hover {
       background-color: var(--secondary-300);

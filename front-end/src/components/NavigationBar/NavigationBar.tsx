@@ -6,16 +6,16 @@ const NavigationBar = () => {
   return (
     <Wrapper>
       <NavLink
-        to="all"
+        to="old"
         className={({ isActive }) => (isActive ? "nav active-nav" : "nav")}
       >
-        <h5>All</h5>
+        <h5>Old</h5>
       </NavLink>
       <NavLink
-        to="mine"
+        to="current"
         className={({ isActive }) => (isActive ? "nav active-nav" : "nav")}
       >
-        <h5>Mine</h5>
+        <h5>Current</h5>
       </NavLink>
       <NavLink
         to="create"
