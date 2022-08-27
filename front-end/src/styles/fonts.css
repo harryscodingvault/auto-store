@@ -23,6 +23,7 @@ body {
 
 p {
   max-width: 40em;
+  margin: 0;
 }
 
 h1,
