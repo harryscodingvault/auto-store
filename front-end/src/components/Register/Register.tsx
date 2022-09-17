@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Wrapper } from "./Register.style";
 
 import FormInput from "../FormComponents/FormInput/FormInput";
@@ -11,10 +11,10 @@ const initialValuesState = {
 };
 
 const initialErrorState = {
-  username: "",
-  email: "",
-  password: "",
-  confirm_password: "",
+  usernameM: "",
+  emailM: "",
+  passwordM: "",
+  confirm_passwordM: "",
 };
 
 const Register = () => {
@@ -29,38 +29,38 @@ const Register = () => {
 
   const checkValues = () => {
     const { username, email, password, confirm_password } = values;
-
     let newUsername = username.trim();
 
+    let verifiedData = true;
+    let usernameM = "",
+      emailM = "",
+      passwordM = "",
+      confirm_passwordM = "";
+
     if (newUsername.length > 20 || newUsername.length < 4) {
-      setErrorMessages({
-        ...errorMessages,
-        username: "Username should be 4-20 characters",
-      });
-      return false;
-    } else if (!email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)) {
-      setErrorMessages({
-        ...errorMessages,
-        email: "It should be a valid email address!",
-      });
-      return false;
-    } else if (password.length < 8) {
-      setErrorMessages({
-        ...errorMessages,
-        password: "It should be 8+ characters!",
-      });
-
-      return false;
-    } else if (password !== confirm_password) {
-      setErrorMessages({
-        ...errorMessages,
-        confirm_password: "Passwords do not match!",
-      });
-
-      return false;
+      verifiedData = false;
+      usernameM = "Username should be 4-20 characters!";
     }
-
-    return true;
+    if (!email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)) {
+      verifiedData = false;
+      emailM = "It should be a valid email address!";
+    }
+    if (password.length < 8) {
+      verifiedData = false;
+      passwordM = "It should be 8+ characters!";
+    }
+    if (password !== confirm_password) {
+      verifiedData = false;
+      confirm_passwordM = "Passwords do not match!";
+    }
+    setErrorMessages({
+      ...errorMessages,
+      usernameM,
+      emailM,
+      passwordM,
+      confirm_passwordM,
+    });
+    return verifiedData;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -78,7 +78,7 @@ const Register = () => {
           type="text"
           label="Username"
           required={true}
-          errorMessage={errorMessages.username}
+          errorMessage={errorMessages.usernameM}
           value={values.username}
           handleChange={handleChange}
         />
@@ -87,7 +87,7 @@ const Register = () => {
           type="text"
           label="Email"
           required={true}
-          errorMessage={errorMessages.email}
+          errorMessage={errorMessages.emailM}
           value={values.email}
           handleChange={handleChange}
         />
@@ -96,7 +96,7 @@ const Register = () => {
           type="password"
           label="Password"
           required={true}
-          errorMessage={errorMessages.password}
+          errorMessage={errorMessages.passwordM}
           value={values.password}
           handleChange={handleChange}
         />
@@ -105,7 +105,7 @@ const Register = () => {
           type="password"
           label="Confirm Password"
           required={true}
-          errorMessage={errorMessages.confirm_password}
+          errorMessage={errorMessages.confirm_passwordM}
           value={values.confirm_password}
           handleChange={handleChange}
         />

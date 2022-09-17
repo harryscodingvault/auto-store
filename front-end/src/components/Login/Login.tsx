@@ -36,7 +36,8 @@ const Login = () => {
         email: "It should be a valid email address!",
       });
       return false;
-    } else if (password.length < 8) {
+    }
+    if (password.length < 8) {
       setErrorMessages({
         ...errorMessages,
         password: "It should be 8+ characters!",
