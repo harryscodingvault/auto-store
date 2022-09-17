@@ -11,10 +11,8 @@ const initialValuesState = {
 };
 
 const initialErrorState = {
-  username: "",
-  email: "",
-  password: "",
-  confirm_password: "",
+  emailM: "",
+  passwordM: "",
 };
 
 const Login = () => {
@@ -29,24 +27,26 @@ const Login = () => {
 
   const checkValues = () => {
     const { email, password } = values;
+    let verifiedData = true;
+
+    let emailM = "",
+      passwordM = "";
 
     if (!email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)) {
-      setErrorMessages({
-        ...errorMessages,
-        email: "It should be a valid email address!",
-      });
-      return false;
+      verifiedData = false;
+      emailM = "It should be a valid email address!";
     }
     if (password.length < 8) {
-      setErrorMessages({
-        ...errorMessages,
-        password: "It should be 8+ characters!",
-      });
-
-      return false;
+      verifiedData = false;
+      passwordM = "It should be 8+ characters!";
     }
 
-    return true;
+    setErrorMessages({
+      ...errorMessages,
+      emailM,
+      passwordM,
+    });
+    return verifiedData;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -64,7 +64,7 @@ const Login = () => {
           type="text"
           label="Email"
           required={true}
-          errorMessage={errorMessages.email}
+          errorMessage={errorMessages.emailM}
           value={values.email}
           handleChange={handleChange}
         />
@@ -73,7 +73,7 @@ const Login = () => {
           type="password"
           label="Password"
           required={true}
-          errorMessage={errorMessages.password}
+          errorMessage={errorMessages.passwordM}
           value={values.password}
           handleChange={handleChange}
         />
