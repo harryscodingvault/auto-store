@@ -18,7 +18,6 @@ export const cards = [
     nVotesNay: 10,
     nVotesNeutral: 2,
     capacity: 50,
-
     passing_vote_req: 25,
     creator_id: "2",
     passed: true,
@@ -31,7 +30,6 @@ export const cards = [
     nVotesNay: 10,
     nVotesNeutral: 2,
     capacity: 50,
-
     passing_vote_req: 25,
     creator_id: "1",
     passed: true,

@@ -45,13 +45,32 @@ const SingleCard = ({ item }: { item: proposalType }) => {
           </tr>
         </tbody>
       </table>
-      <div className="result">
-        {passed ? (
-          <h5 className="positive">Passed</h5>
-        ) : (
-          <h5 className="negative">Not Passed</h5>
-        )}
-      </div>
+      {active ? (
+        <>
+          <div className="button-group">
+            <div className="btn">
+              <h5>Yes</h5>
+            </div>
+            <div className="btn">
+              <h5>No</h5>
+            </div>
+            <div className="btn">
+              <h5>Neither</h5>
+            </div>
+          </div>
+          <div className="edit-group">
+            <div></div>
+          </div>
+        </>
+      ) : (
+        <div className="result">
+          {passed ? (
+            <h5 className="positive">Passed</h5>
+          ) : (
+            <h5 className="negative">Not Passed</h5>
+          )}
+        </div>
+      )}
     </Wrapper>
   );
 };
