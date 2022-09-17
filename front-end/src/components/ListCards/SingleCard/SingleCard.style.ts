@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { medium } from "../../../utils/responsive";
 
 export const Wrapper = styled.div`
   max-width: 600px;
@@ -40,6 +41,15 @@ export const Wrapper = styled.div`
     .negative {
       background-color: var(--red-dark);
       color: var(--secondary-500);
+    }
+  }
+  .button-group {
+    display: flex;
+    flex-direction: column;
+    ${medium({ flexDirection: "row", justifyContent: "space-around" })}
+    .btn {
+      flex: 1;
+      text-align: center;
     }
   }
 `;
