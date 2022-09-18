@@ -9,6 +9,8 @@ import ProposalsLayout from "./pages/ProposalsLayout/ProposalsLayout";
 import ProtectedRoute from "./pages/ProtectedRoute/ProtectedRoute";
 import SignIn from "./pages/SignIn/SignIn";
 import CurrentProposals from "./pages/CurrentProposals/CurrentProposals";
+import EditProposal from "./pages/EditProposal/EditProposal";
+import Profile from "./pages/Profile/Profile";
 
 function App() {
   return (
@@ -28,7 +30,9 @@ function App() {
             <Route path="old" element={<OldProposals />} />
             <Route path="current" element={<CurrentProposals />} />
             <Route path="create" element={<CreateProposal />} />
+            <Route path="edit" element={<EditProposal />} />
           </Route>
+          <Route path="profile" element={<Profile />} />
           <Route path="*" element={<Error />} />
         </Route>
       </Routes>

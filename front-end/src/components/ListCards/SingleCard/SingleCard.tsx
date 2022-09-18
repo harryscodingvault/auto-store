@@ -1,9 +1,11 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { ProposalInterface, proposalType } from "../../../types/proposalType";
 
 import { Wrapper } from "./SingleCard.style";
 
 const SingleCard = ({ item }: { item: proposalType }) => {
+  const navigate = useNavigate();
   const {
     id,
     title,
@@ -59,7 +61,12 @@ const SingleCard = ({ item }: { item: proposalType }) => {
             </div>
           </div>
           <div className="edit-group">
-            <div></div>
+            <div className="btn" onClick={() => navigate("/proposals/edit")}>
+              <h5>Edit</h5>
+            </div>
+            <div className="btn">
+              <h5>Delete</h5>
+            </div>
           </div>
         </>
       ) : (

@@ -52,4 +52,23 @@ export const Wrapper = styled.div`
       text-align: center;
     }
   }
+  .edit-group {
+    display: flex;
+    flex-direction: column;
+    ${medium({ flexDirection: "row", justifyContent: "space-around" })}
+    .btn {
+      flex: 1;
+      text-align: center;
+      border-color: var(--red-dark);
+      h5 {
+        color: var(--red-dark);
+      }
+      :active {
+        border-color: var(--primary-900);
+        h5 {
+          color: var(--primary-900);
+        }
+      }
+    }
+  }
 `;

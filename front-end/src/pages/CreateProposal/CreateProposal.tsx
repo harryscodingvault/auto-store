@@ -11,9 +11,9 @@ const initialValuesState = {
 };
 
 const initialErrorState = {
-  title: "",
-  capacity: "",
-  passing_vote_req: "",
+  titleM: "",
+  capacityM: "",
+  passing_vote_reqM: "",
 };
 
 const CreateProposal = () => {
@@ -29,19 +29,29 @@ const CreateProposal = () => {
 
   const checkValues = () => {
     const { title, capacity, passing_vote_req } = values;
+
+    let verifiedData = true;
+    let titleM = "",
+      capacityM = "",
+      passing_vote_reqM = "";
+
     if (!title.trim()) {
-      setErrorMessages({ ...errorMessages, title: "A title is required!" });
-      return false;
+      verifiedData = false;
+      titleM = "A title is required!";
     }
     if (capacity < passing_vote_req) {
-      setErrorMessages({
-        ...errorMessages,
-        capacity: "Capacity has to be bigger than passing votes!",
-        passing_vote_req: "Capacity has to be bigger than passing votes!",
-      });
-      return false;
+      verifiedData = false;
+      capacityM = "Capacity has to be bigger than passing votes!";
+      passing_vote_reqM = "Capacity has to be bigger than passing votes!";
     }
-    return true;
+    setErrorMessages({
+      ...errorMessages,
+      titleM,
+      capacityM,
+      passing_vote_reqM,
+    });
+
+    return verifiedData;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -59,7 +69,7 @@ const CreateProposal = () => {
           type="text"
           label="Title"
           required={true}
-          errorMessage={errorMessages.title}
+          errorMessage={errorMessages.titleM}
           value={values.title}
           handleChange={handleChange}
         />
@@ -69,7 +79,7 @@ const CreateProposal = () => {
           label="Capacity"
           min={1}
           required={true}
-          errorMessage={errorMessages.capacity}
+          errorMessage={errorMessages.capacityM}
           value={values.capacity}
           handleChange={handleChange}
         />
@@ -79,7 +89,7 @@ const CreateProposal = () => {
           label="Passing Vote"
           min={1}
           required={true}
-          errorMessage={errorMessages.passing_vote_req}
+          errorMessage={errorMessages.passing_vote_reqM}
           value={values.passing_vote_req}
           handleChange={handleChange}
         />
