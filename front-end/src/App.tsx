@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import OldProposals from "./pages/OldProposals/OldProposals";
 import CreateProposal from "./pages/CreateProposal/CreateProposal";
