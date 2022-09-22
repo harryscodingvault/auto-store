@@ -11,7 +11,7 @@ const Main = () => {
   }, []);
 
   useEffect(() => {
-    socket.on("countUpdated", (count: any) => {
+    socket?.on("countUpdated", (count: any) => {
       setCounter(count);
       console.log("The counts has been updated", count);
     });
