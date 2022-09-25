@@ -56,7 +56,6 @@ ul {
 
 /* buttons */
 .btn {
-  border: 0.1rem solid var(--grey-50);
   font-family: inherit;
   padding: 0.5rem;
   transition: 0.1s ease;
@@ -66,7 +65,7 @@ ul {
   -webkit-user-select: none;
   -ms-user-select: none;
   background-color: var(--grey-900);
-  border: 0.2rem solid var(--secondary-500);
+  border: 0.1rem solid var(--secondary-500);
 }
 .btn h5 {
   padding: 0;
@@ -76,7 +75,7 @@ ul {
 
 .btn:hover {
   color: var(--grey-900);
-  border: 0.2rem solid var(--red-dark);
+  border: 0.1rem solid var(--red-dark);
 }
 
 .btn:hover > h5 {
@@ -84,8 +83,7 @@ ul {
 }
 
 .btn:active {
-  background-color: var(--red-dark);
-  border: 0.2rem solid var(--grey-900);
+  border: 0.1rem solid var(--grey-900);
   color: var(--grey-50);
 }
 .btn:active > h5 {

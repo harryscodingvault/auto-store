@@ -56,7 +56,6 @@ ul {
 
 /* buttons */
 .btn {
-  border: 0.1rem solid var(--grey-50);
   font-family: inherit;
   padding: 0.5rem;
   transition: 0.1s ease;
@@ -86,7 +85,7 @@ ul {
 
 .btn:active {
   background-color: var(--secondary-100);
-  border: 0.2rem solid var(--primary-600);
+  border: 0.1rem solid var(--primary-600);
   color: var(--primary-600);
 }
 .btn:active > h5 {
