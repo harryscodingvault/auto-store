@@ -67,8 +67,15 @@ const Home = ({ socket }: { socket: any }) => {
     }
   };
 
+  const Login = () => {
+    fetch("/auth/google");
+  };
+
   return (
     <Wrapper>
+      <div className="btn" onClick={Login}>
+        Login
+      </div>
       <form onSubmit={handleSubmit} className="form">
         <FormInput
           name="username"

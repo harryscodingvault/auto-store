@@ -7,10 +7,10 @@ import Room from "./pages/Room/Room";
 
 function App() {
   const [socket, setSocket] = useState<any>(null);
-
+  /*
   useEffect(() => {
     setSocket(io(`ws://localhost:5000`));
-  }, []);
+  }, []);*/
   return (
     <BrowserRouter>
       <Routes>
