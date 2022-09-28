@@ -19,43 +19,81 @@ export const Wrapper = styled.div`
     flex-direction: row;
     justify-content: center;
     gap: 1rem;
+
     span {
       color: var(--secondary-500);
     }
   }
-  .data-group {
-    thead > tr > th {
+  .list-options {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    .option-item {
+      user-select: none;
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      display: flex;
+      flex-direction: row;
       border: 1px solid var(--secondary-500);
+      width: 95%;
+      cursor: pointer;
+      :hover {
+        p:nth-child(2) {
+          background-color: var(--secondary-800);
+        }
+      }
+      :active {
+        p:nth-child(2) {
+          background-color: var(--secondary-700);
+        }
+      }
+      p:nth-child(1) {
+        border-right: 1px solid var(--secondary-500);
+        padding: 0 0.5rem;
+        color: var(--secondary-500);
+      }
+      p:nth-child(2) {
+        width: 100%;
+        padding: 0 0.5rem;
+      }
     }
-    tbody > tr > td {
-      border: 1px solid var(--secondary-500);
-      text-align: center;
+    .selected {
+      p:nth-child(2) {
+        background-color: var(--secondary-700);
+      }
     }
   }
+
   .result {
-    text-align: center;
-    .positive {
-      background-color: var(--primary-500);
-      color: var(--secondary-500);
-    }
-    .negative {
-      background-color: var(--red-dark);
-      color: var(--secondary-500);
-    }
-  }
-  .button-group {
     display: flex;
     flex-direction: column;
-    ${medium({ flexDirection: "row", justifyContent: "space-around" })}
-    .btn {
-      flex: 1;
-      text-align: center;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    h5:nth-child(1) {
+      color: var(--secondary-500);
+    }
+    h5:nth-child(2) {
+      padding: 0 0.5rem;
     }
   }
+
   .edit-group {
+    width: 95%;
+    margin: auto;
     display: flex;
     flex-direction: column;
-    ${medium({ flexDirection: "row", justifyContent: "space-around" })}
+    gap: 0.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+
+    ${medium({
+      flexDirection: "row",
+      justifyContent: "space-around",
+    })}
     .btn {
       flex: 1;
       text-align: center;

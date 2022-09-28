@@ -6,7 +6,8 @@ import { Wrapper } from "./SingleCard.style";
 
 const SingleCard = ({ item }: { item: proposalInterface }) => {
   const navigate = useNavigate();
-  const { id, title, options, timeLeft, max, creator_id, active } = item;
+  const { id, title, options, timeLeft, max, creator_id, active, winner } =
+    item;
 
   return (
     <Wrapper>
@@ -20,9 +21,26 @@ const SingleCard = ({ item }: { item: proposalInterface }) => {
       </div>
       <ul className="list-options">
         {options.map((item) => (
-          <li className="option-item">{item.name}</li>
+          <li className={`option-item ${item.selected && "selected"}`}>
+            <p>{item.votes}</p>
+            <p>{item.name}</p>
+          </li>
         ))}
       </ul>
+      {!active && (
+        <div className="result">
+          <h5>Passed:</h5>
+          <h5>{winner}</h5>
+        </div>
+      )}
+      <div className="edit-group">
+        <div className="btn">
+          <h5>Edit</h5>
+        </div>
+        <div className="btn">
+          <h5>Delete</h5>
+        </div>
+      </div>
     </Wrapper>
   );
 };

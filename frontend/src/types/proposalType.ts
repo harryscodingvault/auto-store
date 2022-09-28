@@ -1,6 +1,7 @@
 export interface optionInterface {
   votes: number;
   name: string;
+  selected: boolean;
 }
 
 export interface proposalInterface {
@@ -11,4 +12,6 @@ export interface proposalInterface {
   creator_id: string;
   max: number;
   active: boolean;
+  winner: string;
+  voted: boolean;
 }
