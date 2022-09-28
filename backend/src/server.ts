@@ -4,21 +4,28 @@ import cors from "cors";
 import socketioApp from "./socketio/socketio";
 import session from "express-session";
 import passport from "passport";
+import dotenv from "dotenv";
+dotenv.config();
 // DB
-import mongoose from "mongoose";
 import connectDB from "./db/connect";
 
 import "./services/passport";
-import { keys } from "./config/keys";
 
 const app = express();
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true,
+  })
+);
+
 const server = http.createServer(app);
 socketioApp(server);
 
-app.use(cors());
 app.use(
   session({
-    secret: keys.COOKIE_KEY,
+    secret: `${process.env.COOKIE_KEY}`,
     resave: true,
     saveUninitialized: true,
     cookie: {},
@@ -35,7 +42,7 @@ app.use("/api/auth", AuthRouter);
 const port = process.env.PORT || 5000;
 const start = async () => {
   try {
-    await connectDB(keys.MONGO_URI);
+    await connectDB(`${process.env.MONGO_URI}`);
     app.listen(port, () => {
       console.log(`Server reporting at ${port}`);
     });
