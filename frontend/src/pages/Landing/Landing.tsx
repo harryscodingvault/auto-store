@@ -19,7 +19,10 @@ const Landing = () => {
         </li>
       </ul>
 
-      <div className="btn google-btn" onClick={() => navigate("home")}>
+      <div
+        className="btn google-btn"
+        onClick={() => navigate("home/proposals/current")}
+      >
         <h5>Google SignIn</h5>
       </div>
     </Wrapper>
