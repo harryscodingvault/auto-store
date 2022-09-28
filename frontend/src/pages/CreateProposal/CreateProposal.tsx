@@ -3,11 +3,14 @@ import { Wrapper } from "./CreateProposal.style";
 import { useNavigate } from "react-router-dom";
 
 import FormInput from "../../components/FormComponents/FormInput/FormInput";
+import { getCurrentDay } from "../../utils/datetime _management";
+
+const getDay = getCurrentDay();
 
 const initialValuesState = {
   title: "",
-  time_req: "00:30",
-  date_req: "",
+  time_req: getDay.currTime,
+  date_req: getDay.currDay,
   capacity: 10,
 };
 
@@ -27,6 +30,8 @@ const CreateProposal = () => {
   const [errorMessages, setErrorMessages] = useState(initialErrorState);
   const navigate = useNavigate();
 
+  console.log(values.date_req);
+
   const handleChange = (e: React.FormEvent) => {
     const name = (e.target as HTMLInputElement).name;
     const value = (e.target as HTMLInputElement).value;
@@ -44,11 +49,15 @@ const CreateProposal = () => {
 
     let verifiedData = true;
     let titleM = "",
+      capacityM = "",
       optionsM = [""];
 
     if (!title.trim()) {
       verifiedData = false;
       titleM = "A title is required!";
+    }
+    if (capacity < 2 || capacity > 100) {
+      capacityM = "2=<capacity<=100";
     }
     proposals.map((item, index) => {
       if (proposals[index].trim() === "") {
@@ -62,6 +71,7 @@ const CreateProposal = () => {
       ...errorMessages,
       titleM,
       optionsM,
+      capacityM,
     });
 
     return verifiedData;
