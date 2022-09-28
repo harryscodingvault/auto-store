@@ -114,31 +114,32 @@ const CreateProposal = () => {
           value={values.capacity}
           handleChange={handleChange}
         />
-
-        <h5>Options</h5>
-        {proposals.map((item, index) => (
-          <div className="option-input" key={index}>
-            <FormInput
-              name={`option-${index}`}
-              type="string"
-              label={`Option ${index + 1}`}
-              required={true}
-              errorMessage={errorMessages.optionsM[index]}
-              value={proposals[index]}
-              handleChange={(e) => arrayChangeHandler(e, index)}
-            />
-            {proposals.length > 2 && (
-              <div
-                className="btn"
-                onClick={() =>
-                  setProposals(proposals.filter((item, i) => i !== index))
-                }
-              >
-                X
-              </div>
-            )}
-          </div>
-        ))}
+        <div className="option-list">
+          <h5>Options</h5>
+          {proposals.map((item, index) => (
+            <div className="option-input" key={index}>
+              <FormInput
+                name={`option-${index}`}
+                type="string"
+                label={`Option ${index + 1}`}
+                required={true}
+                errorMessage={errorMessages.optionsM[index]}
+                value={proposals[index]}
+                handleChange={(e) => arrayChangeHandler(e, index)}
+              />
+              {proposals.length > 2 && (
+                <div
+                  className="btn"
+                  onClick={() =>
+                    setProposals(proposals.filter((item, i) => i !== index))
+                  }
+                >
+                  X
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
         {proposals.length < 100 && (
           <button
             type="button"
@@ -148,7 +149,6 @@ const CreateProposal = () => {
             <h5>New Option</h5>
           </button>
         )}
-
         <div className="btn-group">
           <button type="submit" className="btn">
             <h5>Create</h5>

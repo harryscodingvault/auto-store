@@ -113,7 +113,6 @@ ul {
   padding: 0.375rem 0.75rem;
   background-color: var(--backgroundColor);
   border: 1px solid var(--secondary-500);
-  border-bottom: 4px solid var(--secondary-500);
   color: var(--secondary-500);
 }
 
