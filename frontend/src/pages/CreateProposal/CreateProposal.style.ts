@@ -5,6 +5,7 @@ export const Wrapper = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  margin: 0 auto;
   form {
     display: flex;
     align-items: center;
@@ -14,7 +15,12 @@ export const Wrapper = styled.div`
     padding: 2.5rem 0;
     max-width: 100%;
   }
-  .btn {
+  .btn-group {
+    display: flex;
     margin-top: 1rem;
+    width: 90%;
+    .btn {
+      flex: 1;
+    }
   }
 `;
