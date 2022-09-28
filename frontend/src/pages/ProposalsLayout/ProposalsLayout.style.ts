@@ -7,6 +7,6 @@ export const Wrapper = styled.div`
   flex-direction: column;
 
   .main-container {
-    min-height: 75vh;
+    min-height: 80vh;
   }
 `;

@@ -6,18 +6,23 @@ import FormInput from "../../components/FormComponents/FormInput/FormInput";
 
 const initialValuesState = {
   title: "",
-  capacity: 2,
-  passing_vote_req: 1,
+  options: ["yes", "no"],
+  time_req: "00:30",
+  date_req: "",
+  capacity: 10,
 };
 
 const initialErrorState = {
   titleM: "",
+  optionsM: [],
+  time_reqM: "",
+  date_reqM: "",
   capacityM: "",
-  passing_vote_reqM: "",
 };
 
 const CreateProposal = () => {
   const [values, setValues] = useState(initialValuesState);
+  const [proposals, setProposals] = useState([]);
   const [errorMessages, setErrorMessages] = useState(initialErrorState);
   const navigate = useNavigate();
 
@@ -26,29 +31,25 @@ const CreateProposal = () => {
     const value = (e.target as HTMLInputElement).value;
     setValues({ ...values, [name]: value });
   };
+  const arrayHandler = (e: React.FormEvent) => {
+    const name = (e.target as HTMLInputElement).name;
+    const value = (e.target as HTMLInputElement).value;
+  };
 
   const checkValues = () => {
-    const { title, capacity, passing_vote_req } = values;
+    const { title, options, time_req, date_req, capacity } = values;
 
     let verifiedData = true;
-    let titleM = "",
-      capacityM = "",
-      passing_vote_reqM = "";
+    let titleM = "";
 
     if (!title.trim()) {
       verifiedData = false;
       titleM = "A title is required!";
     }
-    if (capacity < passing_vote_req) {
-      verifiedData = false;
-      capacityM = "Capacity has to be bigger than passing votes!";
-      passing_vote_reqM = "Capacity has to be bigger than passing votes!";
-    }
+
     setErrorMessages({
       ...errorMessages,
       titleM,
-      capacityM,
-      passing_vote_reqM,
     });
 
     return verifiedData;
@@ -74,25 +75,72 @@ const CreateProposal = () => {
           handleChange={handleChange}
         />
         <FormInput
+          name="time_req"
+          type="time"
+          label="Time"
+          required={true}
+          errorMessage={errorMessages.time_reqM}
+          value={values.time_req}
+          handleChange={handleChange}
+        />
+        <FormInput
+          name="date"
+          type="date"
+          label="Date"
+          required={true}
+          errorMessage={errorMessages.date_reqM}
+          value={values.date_req}
+          handleChange={handleChange}
+        />
+        <FormInput
           name="capacity"
           type="number"
+          min={2}
           label="Capacity"
-          min={1}
           required={true}
           errorMessage={errorMessages.capacityM}
           value={values.capacity}
           handleChange={handleChange}
         />
-        <FormInput
-          name="passing_vote_req"
-          type="number"
-          label="Passing Vote"
-          min={1}
-          required={true}
-          errorMessage={errorMessages.passing_vote_reqM}
-          value={values.passing_vote_req}
-          handleChange={handleChange}
-        />
+
+        <h5>Options</h5>
+        {values.options.map((item, index) => (
+          <div className="option-input" key={index}>
+            <FormInput
+              name={`${index}`}
+              type="string"
+              label={`Option ${index + 1}`}
+              required={true}
+              errorMessage={errorMessages.capacityM}
+              value={values.options[index]}
+              handleChange={handleChange}
+            />
+            {values.options.length > 2 && (
+              <div
+                className="btn"
+                onClick={() =>
+                  setValues({
+                    ...values,
+                    options: values.options.filter((item, i) => i !== index),
+                  })
+                }
+              >
+                X
+              </div>
+            )}
+          </div>
+        ))}
+
+        <button
+          type="button"
+          className="btn"
+          onClick={() =>
+            setValues({ ...values, options: [...values.options, ""] })
+          }
+        >
+          <h5>New Option</h5>
+        </button>
+
         <div className="btn-group">
           <button type="submit" className="btn">
             <h5>Create</h5>

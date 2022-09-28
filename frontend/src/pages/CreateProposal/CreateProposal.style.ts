@@ -6,6 +6,8 @@ export const Wrapper = styled.div`
   justify-content: center;
   flex-direction: column;
   margin: 0 auto;
+  margin-top: 2rem;
+  min-height: 65vh;
   form {
     display: flex;
     align-items: center;

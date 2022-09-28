@@ -10,6 +10,7 @@ import ProposalsLayout from "./pages/ProposalsLayout/ProposalsLayout";
 import CurrentProposals from "./pages/CurrentProposals/CurrentProposals";
 import OldProposals from "./pages/OldProposals/OldProposals";
 import CreateProposal from "./pages/CreateProposal/CreateProposal";
+import Profile from "./pages/Profile/Profile";
 
 function App() {
   return (
@@ -24,9 +25,8 @@ function App() {
               <Route path="old" element={<OldProposals />} />
               <Route path="create" element={<CreateProposal />} />
             </Route>
-            <Route path="create" element={<Home />} />
 
-            <Route path="profile" element={<Home />} />
+            <Route path="profile" element={<Profile />} />
           </Route>
         </Route>
 
