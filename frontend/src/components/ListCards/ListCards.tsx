@@ -2,9 +2,9 @@ import React from "react";
 import { Wrapper } from "./ListCards.style";
 
 import SingleCard from "./SingleCard/SingleCard";
-import { proposalType } from "../../types/proposalType";
+import { proposalInterface } from "../../types/proposalType";
 
-const ListCards = ({ itemList }: { itemList: proposalType[] }) => {
+const ListCards = ({ itemList }: { itemList: proposalInterface[] }) => {
   return (
     <Wrapper>
       {itemList.map((item) => (

@@ -1,17 +1,14 @@
-export type proposalType = {
+export interface optionInterface {
+  votes: number;
+  name: string;
+}
+
+export interface proposalInterface {
   id: string;
   title: string;
-  nVotesYay: number;
-  nVotesNay: number;
-  nVotesNeutral: number;
-  capacity: number;
-  passing_vote_req: number;
-
+  options: optionInterface[];
+  timeLeft: string;
   creator_id: string;
-  passed: boolean;
+  max: number;
   active: boolean;
-};
-
-export interface ProposalInterface {
-  data: proposalType;
 }

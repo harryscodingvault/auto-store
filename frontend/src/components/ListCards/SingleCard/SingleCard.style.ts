@@ -59,15 +59,16 @@ export const Wrapper = styled.div`
     .btn {
       flex: 1;
       text-align: center;
-      border-color: var(--red-dark);
+      border: 1px solid var(--grey-50);
+      background-color: var(--red-dark);
       h5 {
-        color: var(--red-dark);
+        color: var(--grey-50);
+      }
+      :hover {
+        background-color: var(--red-light);
       }
       :active {
-        border-color: var(--primary-900);
-        h5 {
-          color: var(--primary-900);
-        }
+        background-color: var(--red-light);
       }
     }
   }

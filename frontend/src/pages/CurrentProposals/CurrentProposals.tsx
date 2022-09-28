@@ -5,16 +5,9 @@ import Modal from "../../components/Modal/Modal";
 
 const UserProposals = () => {
   const filteredCards = cards.filter((item) => item.active === true);
-  const [openModal, setOpenModal] = useState(true);
 
   return (
     <div>
-      {openModal && (
-        <Modal
-          title="Do you want to delete this proposal?"
-          closeModal={setOpenModal}
-        />
-      )}
       <ListCards itemList={filteredCards} />
     </div>
   );
