@@ -3,11 +3,12 @@ import styled from "styled-components";
 export const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
-  width: 100vw;
+  width: 96vw;
+  max-width: var(--fixed-width);
   align-items: center;
-  justify-content: space-around;
+
   margin-top: 1rem;
-  max-width: 600px;
+
   cursor: pointer;
   user-select: none;
   -moz-user-select: none;
@@ -24,7 +25,7 @@ export const Wrapper = styled.div`
     flex: 1;
     transition: 0.1s ease;
     color: var(--secondary-500);
-    padding: 0.1rem;
+    padding: 0.5rem 0;
     :nth-child(1) {
       border-left: 1px solid var(--secondary-500);
     }

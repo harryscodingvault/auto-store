@@ -5,8 +5,8 @@ export const Wrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   flex-direction: column;
+
   .main-container {
-    width: 100%;
     min-height: 75vh;
   }
 `;

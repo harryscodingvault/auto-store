@@ -12,7 +12,7 @@ const NavigationBar = () => {
         <h5>Old</h5>
       </NavLink>
       <NavLink
-        to="/"
+        to=""
         className={({ isActive }) => (isActive ? "nav active-nav" : "nav")}
       >
         <h5>Current</h5>

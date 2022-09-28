@@ -13,18 +13,16 @@ const SingleCard = ({ item }: { item: proposalInterface }) => {
       <div className="title">
         <h5>{title}</h5>
       </div>
-      <div className="edit-group">
-        <div className="btn" onClick={() => navigate("/proposals/edit")}>
-          <h5>Edit</h5>
-        </div>
-        <div className="btn">
-          <h5>Delete</h5>
-        </div>
-      </div>
+
       <div className="creator">
         <span>by:</span>
         <p>{creator_id}</p>
       </div>
+      <ul className="list-options">
+        {options.map((item) => (
+          <li className="option-item">{item.name}</li>
+        ))}
+      </ul>
     </Wrapper>
   );
 };

@@ -2,8 +2,8 @@ import styled from "styled-components";
 import { medium } from "../../../utils/responsive";
 
 export const Wrapper = styled.div`
-  max-width: 600px;
-  width: 100vw;
+  width: 96vw;
+  max-width: var(--fixed-width);
   border: 1px solid var(--secondary-500);
   display: flex;
   flex-direction: column;
