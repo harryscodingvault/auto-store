@@ -21,7 +21,10 @@ const SingleCard = ({ item }: { item: proposalInterface }) => {
       </div>
       <ul className="list-options">
         {options.map((item) => (
-          <li className={`option-item ${item.selected && "selected"}`}>
+          <li
+            className={`option-item ${item.selected && "selected"}`}
+            key={item.id}
+          >
             <p>{item.votes}</p>
             <p>{item.name}</p>
           </li>

@@ -6,15 +6,16 @@ import FormInput from "../../components/FormComponents/FormInput/FormInput";
 
 const initialValuesState = {
   title: "",
-  options: ["yes", "no"],
   time_req: "00:30",
   date_req: "",
   capacity: 10,
 };
 
+const initialValuesOptions = ["yes", "no"];
+
 const initialErrorState = {
   titleM: "",
-  optionsM: [],
+  optionsM: [""],
   time_reqM: "",
   date_reqM: "",
   capacityM: "",
@@ -22,7 +23,7 @@ const initialErrorState = {
 
 const CreateProposal = () => {
   const [values, setValues] = useState(initialValuesState);
-  const [proposals, setProposals] = useState([]);
+  const [proposals, setProposals] = useState(initialValuesOptions);
   const [errorMessages, setErrorMessages] = useState(initialErrorState);
   const navigate = useNavigate();
 
@@ -31,25 +32,36 @@ const CreateProposal = () => {
     const value = (e.target as HTMLInputElement).value;
     setValues({ ...values, [name]: value });
   };
-  const arrayHandler = (e: React.FormEvent) => {
-    const name = (e.target as HTMLInputElement).name;
+  const arrayChangeHandler = (e: React.FormEvent, index: number) => {
     const value = (e.target as HTMLInputElement).value;
+    const list = [...proposals];
+    list[index] = value;
+    setProposals([...list]);
   };
 
   const checkValues = () => {
-    const { title, options, time_req, date_req, capacity } = values;
+    const { title, time_req, date_req, capacity } = values;
 
     let verifiedData = true;
-    let titleM = "";
+    let titleM = "",
+      optionsM = [""];
 
     if (!title.trim()) {
       verifiedData = false;
       titleM = "A title is required!";
     }
+    proposals.map((item, index) => {
+      if (proposals[index].trim() === "") {
+        optionsM[index] = "Empty value";
+      } else {
+        optionsM[index] = "";
+      }
+    });
 
     setErrorMessages({
       ...errorMessages,
       titleM,
+      optionsM,
     });
 
     return verifiedData;
@@ -58,7 +70,7 @@ const CreateProposal = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (checkValues()) {
-      console.log("register", { data: values });
+      console.log("register", { data: values, proposal: proposals });
     }
   };
 
@@ -84,7 +96,7 @@ const CreateProposal = () => {
           handleChange={handleChange}
         />
         <FormInput
-          name="date"
+          name="date_req"
           type="date"
           label="Date"
           required={true}
@@ -104,25 +116,22 @@ const CreateProposal = () => {
         />
 
         <h5>Options</h5>
-        {values.options.map((item, index) => (
+        {proposals.map((item, index) => (
           <div className="option-input" key={index}>
             <FormInput
-              name={`${index}`}
+              name={`option-${index}`}
               type="string"
               label={`Option ${index + 1}`}
               required={true}
-              errorMessage={errorMessages.capacityM}
-              value={values.options[index]}
-              handleChange={handleChange}
+              errorMessage={errorMessages.optionsM[index]}
+              value={proposals[index]}
+              handleChange={(e) => arrayChangeHandler(e, index)}
             />
-            {values.options.length > 2 && (
+            {proposals.length > 2 && (
               <div
                 className="btn"
                 onClick={() =>
-                  setValues({
-                    ...values,
-                    options: values.options.filter((item, i) => i !== index),
-                  })
+                  setProposals(proposals.filter((item, i) => i !== index))
                 }
               >
                 X
@@ -130,16 +139,15 @@ const CreateProposal = () => {
             )}
           </div>
         ))}
-
-        <button
-          type="button"
-          className="btn"
-          onClick={() =>
-            setValues({ ...values, options: [...values.options, ""] })
-          }
-        >
-          <h5>New Option</h5>
-        </button>
+        {proposals.length < 100 && (
+          <button
+            type="button"
+            className="btn"
+            onClick={() => setProposals([...proposals, ""])}
+          >
+            <h5>New Option</h5>
+          </button>
+        )}
 
         <div className="btn-group">
           <button type="submit" className="btn">

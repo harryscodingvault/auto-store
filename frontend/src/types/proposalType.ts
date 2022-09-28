@@ -1,11 +1,12 @@
 export interface optionInterface {
+  id: number | string;
   votes: number;
   name: string;
   selected: boolean;
 }
 
 export interface proposalInterface {
-  id: string;
+  id: number | string;
   title: string;
   options: optionInterface[];
   timeLeft: string;

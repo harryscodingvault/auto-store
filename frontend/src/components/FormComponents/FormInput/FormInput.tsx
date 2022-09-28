@@ -36,7 +36,7 @@ const FormInput = ({
         required={required}
         min={min}
       />
-      {errorMessage !== "" && (
+      {errorMessage !== "" && errorMessage !== undefined && (
         <span className="alert alert-danger">{errorMessage}</span>
       )}
     </Wrapper>
