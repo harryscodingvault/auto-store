@@ -3,9 +3,10 @@ import { Wrapper } from "./CreateProposal.style";
 import { useNavigate } from "react-router-dom";
 
 import FormInput from "../../components/FormComponents/FormInput/FormInput";
-import { getCurrentDay } from "../../utils/datetime _management";
+import { getCurrentDay, getDatePlus30 } from "../../utils/datetime _management";
+import { isAfter, isBefore } from "date-fns";
 
-const getDay = getCurrentDay();
+const getDay = getDatePlus30();
 
 const initialValuesState = {
   title: "",
@@ -30,8 +31,6 @@ const CreateProposal = () => {
   const [errorMessages, setErrorMessages] = useState(initialErrorState);
   const navigate = useNavigate();
 
-  console.log(values.date_req);
-
   const handleChange = (e: React.FormEvent) => {
     const name = (e.target as HTMLInputElement).name;
     const value = (e.target as HTMLInputElement).value;
@@ -47,20 +46,34 @@ const CreateProposal = () => {
   const checkValues = () => {
     const { title, time_req, date_req, capacity } = values;
 
+    const inputDate = new Date(`${date_req} ${time_req}`);
+    const thisDay = getCurrentDay();
+
     let verifiedData = true;
     let titleM = "",
       capacityM = "",
-      optionsM = [""];
+      optionsM = [""],
+      time_reqM = "",
+      date_reqM = "";
 
     if (!title.trim()) {
       verifiedData = false;
       titleM = "A title is required!";
     }
+
+    if (!isBefore(thisDay.currDate, inputDate)) {
+      verifiedData = false;
+      date_reqM = "Future Date or Time required!";
+      time_reqM = "Future Date or Time required!";
+    }
+
     if (capacity < 2 || capacity > 100) {
+      verifiedData = false;
       capacityM = "2=<capacity<=100";
     }
     proposals.map((item, index) => {
       if (proposals[index].trim() === "") {
+        verifiedData = false;
         optionsM[index] = "Empty value";
       } else {
         optionsM[index] = "";
@@ -72,6 +85,8 @@ const CreateProposal = () => {
       titleM,
       optionsM,
       capacityM,
+      time_reqM,
+      date_reqM,
     });
 
     return verifiedData;
