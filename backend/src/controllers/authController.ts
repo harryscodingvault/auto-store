@@ -23,3 +23,13 @@ export const createUser = async (
     return next(err);
   }
 };
+
+export const getUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const _id = req.params.id;
+  const thisUser = User.findById(_id);
+  res.status(StatusCodes.OK).json({ data: thisUser });
+};
