@@ -1,29 +1,25 @@
 import express, { NextFunction, Request, Response } from "express";
+import User from "../models/UserModel";
+import bcrypt from "bcrypt";
+import { StatusCodes } from "http-status-codes";
 
-export const logout = async (req: Request, res: Response) => {
-  req.logout(function (err: any) {
-    console.log(err);
-  });
-  res.redirect(`${process.env.FRONTEND_URL}`);
-};
+export const createUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(req.body.password, salt);
+    const newUser = await new User({
+      ...req.body,
+      password: hashedPassword,
+    }).save();
 
-export const profile = async (req: Request, res: Response) => {
-  res.send(req.user);
-};
-
-export const loginFailure = async (req: Request, res: Response) => {
-  res.status(401).json({
-    success: false,
-    message: "failure",
-  });
-};
-
-export const loginSuccess = async (req: Request, res: Response) => {
-  if (req.user) {
-    res.status(200).json({
-      success: true,
-      message: "successful",
-      user: req.user,
-    });
+    res
+      .status(StatusCodes.OK)
+      .json({ username: newUser.username, email: newUser.email });
+  } catch (err) {
+    return next(err);
   }
 };

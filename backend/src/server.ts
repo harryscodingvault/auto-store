@@ -19,25 +19,24 @@ app.use(
     credentials: true,
   })
 );
-
+app.use(express.json());
 const server = http.createServer(app);
 socketioApp(server);
 
-app.use(
-  session({
-    secret: `${process.env.COOKIE_KEY}`,
-    resave: true,
-    saveUninitialized: true,
-    cookie: {},
-  })
-);
-app.use(passport.initialize());
-app.use(passport.session());
-
-// ROUTER
+// ROUTES
 import AuthRouter from "./routes/authRoutes";
+import ProposalRouter from "./routes/proposalRoutes";
+import UserRouter from "./routes/userRoutes";
+import notFoundMiddleware from "./middleware/notFound";
+import errorHandlerMiddleware from "./middleware/errorHandler";
 
 app.use("/api/auth", AuthRouter);
+app.use("/api/user", UserRouter);
+app.use("/api/proposal", ProposalRouter);
+
+// MIDDLEWARE
+app.use(notFoundMiddleware);
+app.use(errorHandlerMiddleware);
 
 const port = process.env.PORT || 5000;
 const start = async () => {

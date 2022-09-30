@@ -9,6 +9,7 @@ const proposalSchema = new mongoose.Schema(
     title: {
       type: String,
       required: true,
+      trim: true,
     },
     deadline: {
       type: Date,
@@ -17,6 +18,11 @@ const proposalSchema = new mongoose.Schema(
     capacity: {
       type: Number,
       required: true,
+      validate(value: Number) {
+        if (value < 2) {
+          throw new Error("Age must be a positive number!");
+        }
+      },
     },
     active: {
       type: Boolean,
@@ -30,10 +36,7 @@ const proposalSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
-    options: {
-      type: [{ optionId: String, votes: [String], name: String }],
-      default: [],
-    },
+    options: [{ optionId: String, votes: [String], name: String }],
   },
   { timestamps: true }
 );
