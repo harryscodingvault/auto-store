@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
 import User from "../models/UserModel";
-import bcrypt from "bcrypt";
+
 import { StatusCodes } from "http-status-codes";
 
 export const getUser = async (
@@ -20,6 +20,16 @@ export const getUser = async (
     .json({ username: user?.username, email: user?.email, _id: user?._id });
 };
 
+export const getAllUsers = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const users = await User.find({});
+
+  res.status(StatusCodes.OK).json(users);
+};
+
 export const updateUser = async (
   req: Request,
   res: Response,
@@ -36,12 +46,11 @@ export const updateUser = async (
     res.status(StatusCodes.BAD_REQUEST).send({ error: "Invalid updates!" });
   }
   try {
-    const _id = req.params.id;
+    const user: any = await User.findById(req.params.id);
 
-    const user = await User.findByIdAndUpdate(_id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    updates.forEach((update) => (user[update] = req.body[update]));
+    await user?.save();
+
     if (!user) {
       return res.status(StatusCodes.NOT_FOUND).send();
     }
