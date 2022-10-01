@@ -36,7 +36,7 @@ const proposalSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
-    options: [{ optionId: String, votes: [String], name: String }],
+    options: [{ votes: [String], name: String }],
   },
   { timestamps: true }
 );
