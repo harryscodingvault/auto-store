@@ -25,5 +25,28 @@ export const updateUser = async (
   res: Response,
   next: NextFunction
 ) => {
-  res.status(StatusCodes.OK).json({ data: "updated" });
+  const updates = Object.keys(req.body);
+  const allowedUpdates = ["email", "username", "password"];
+
+  const isValidOperation = updates.every((update) =>
+    allowedUpdates.includes(update)
+  );
+
+  if (!isValidOperation) {
+    res.status(StatusCodes.BAD_REQUEST).send({ error: "Invalid updates!" });
+  }
+  try {
+    const _id = req.params.id;
+
+    const user = await User.findByIdAndUpdate(_id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!user) {
+      return res.status(StatusCodes.NOT_FOUND).send();
+    }
+    res.status(StatusCodes.OK).json(user);
+  } catch (error) {
+    res.status(StatusCodes.BAD_REQUEST).send(error);
+  }
 };
