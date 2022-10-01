@@ -80,3 +80,23 @@ export const updateProposal = async (
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error);
   }
 };
+
+export const deleteProposal = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const _id = req.params.id;
+
+    const proposal = await Proposal.findByIdAndDelete(_id);
+    if (!proposal) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .send({ error: "No proposal found" });
+    }
+    res.status(StatusCodes.OK).json(proposal);
+  } catch (error) {
+    res.status(StatusCodes.BAD_REQUEST).send(error);
+  }
+};

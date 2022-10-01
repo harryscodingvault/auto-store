@@ -50,3 +50,21 @@ export const updateUser = async (
     res.status(StatusCodes.BAD_REQUEST).send(error);
   }
 };
+
+export const deleteUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const _id = req.params.id;
+
+    const user = await User.findByIdAndDelete(_id);
+    if (!user) {
+      return res.status(StatusCodes.NOT_FOUND).send({ error: "No user found" });
+    }
+    res.status(StatusCodes.OK).json(user);
+  } catch (error) {
+    res.status(StatusCodes.BAD_REQUEST).send(error);
+  }
+};
