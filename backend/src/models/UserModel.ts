@@ -28,4 +28,10 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+userSchema.pre("save", async function (next) {
+  const user = this;
+  console.log("pre save");
+  next();
+});
+
 export default mongoose.model("User", userSchema);

@@ -1,9 +1,9 @@
 import passport from "passport";
 import express from "express";
-import { getUser } from "../controllers/authController";
+import { getUser, updateUser } from "../controllers/userController";
 
 const router = express.Router();
 
-router.route("/user/:id").get(getUser);
+router.route("/:id").get(getUser).patch(updateUser);
 
 export default router;

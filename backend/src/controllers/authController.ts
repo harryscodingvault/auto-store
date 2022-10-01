@@ -18,18 +18,33 @@ export const createUser = async (
 
     res
       .status(StatusCodes.OK)
-      .json({ username: newUser.username, email: newUser.email });
+      .json({
+        username: newUser.username,
+        email: newUser.email,
+        _id: newUser._id,
+      });
   } catch (err) {
     return next(err);
   }
 };
 
-export const getUser = async (
+export const loginUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const _id = req.params.id;
-  const thisUser = User.findById(_id);
-  res.status(StatusCodes.OK).json({ data: thisUser });
+  try {
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(req.body.password, salt);
+    const newUser = await new User({
+      ...req.body,
+      password: hashedPassword,
+    }).save();
+
+    res
+      .status(StatusCodes.OK)
+      .json({ username: newUser.username, email: newUser.email });
+  } catch (err) {
+    return next(err);
+  }
 };
