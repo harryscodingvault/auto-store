@@ -8,16 +8,9 @@ export const getUser = async (
   res: Response,
   next: NextFunction
 ) => {
-  const _id = req.params.id;
-  const user = await User.findById(_id);
+  const user = res.locals.user;
 
-  if (!user) {
-    return res.status(StatusCodes.NOT_FOUND).send();
-  }
-
-  res
-    .status(StatusCodes.OK)
-    .json({ username: user?.username, email: user?.email, _id: user?._id });
+  res.status(StatusCodes.OK).json(user);
 };
 
 export const getAllUsers = async (

@@ -7,12 +7,17 @@ import express, {
 import { StatusCodes } from "http-status-codes";
 
 const errorHandlerMiddleware = (
-  err: TypeError,
+  err: Error,
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  return res.status(StatusCodes.BAD_REQUEST).send(err.message);
+  const defaultError = {
+    //@ts-ignored
+    statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+    message: err.message || "Something went wrong, try again later",
+  };
+  res.status(defaultError.statusCode).json({ message: defaultError.message });
 };
 
 export default errorHandlerMiddleware;

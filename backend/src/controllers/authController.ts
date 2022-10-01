@@ -28,11 +28,14 @@ export const createUser = async (
     }).save();
 
     const token = await createJWT(newUser._id);
+    newUser.tokens = newUser.tokens.concat({ token });
+    await newUser.save();
 
     res.status(StatusCodes.OK).json({
       username: newUser.username,
       email: newUser.email,
       _id: newUser._id,
+      tokens: newUser.tokens,
       token,
     });
   } catch (error) {
@@ -65,12 +68,53 @@ export const loginUser = async (
     }
 
     const token = await createJWT(userExist._id);
+    userExist.tokens = userExist.tokens.concat({ token });
+    await userExist.save();
 
     res.status(StatusCodes.OK).json({
       username: userExist.username,
       email: userExist.email,
       _id: userExist._id,
+      tokens: userExist.tokens,
       token,
+    });
+  } catch (error) {
+    res.status(StatusCodes.BAD_REQUEST).send(error);
+  }
+};
+
+export const logoutUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = res.locals.user;
+
+    user.tokens = user.tokens.filter((token: any) => {
+      return token.token !== res.locals.token;
+    });
+    await res.locals.user.save();
+    res.status(StatusCodes.OK).json({
+      message: `${user.username} logged out`,
+    });
+  } catch (error) {
+    res.status(StatusCodes.BAD_REQUEST).send(error);
+  }
+};
+
+export const logoutUserAll = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = res.locals.user;
+
+    user.tokens = [];
+    await res.locals.user.save();
+    res.status(StatusCodes.OK).json({
+      message: `${user.username} logged out`,
     });
   } catch (error) {
     res.status(StatusCodes.BAD_REQUEST).send(error);

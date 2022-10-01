@@ -24,6 +24,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    tokens: [{ token: { type: String, required: true } }],
     proposalsVoted: [{ proposalId: String, optionId: String }],
   },
   { timestamps: true }
