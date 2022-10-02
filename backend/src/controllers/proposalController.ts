@@ -48,17 +48,26 @@ export const getAllProposals = async (
   res: Response,
   next: NextFunction
 ) => {
-  const match: any = {};
+  // SORTING PAGINATION
   const page = parseInt(req.params.page) || 0;
   const limit = parseInt(req.params.limit) || 10;
-  if (req.query.active) {
-    match.active = req.query.active === "true";
+  const active = req.query.active || true;
+  const sortRequirement: any = {};
+  const sortQ: any = req.query.sortBy;
+
+  if (sortQ) {
+    const parts: any = sortQ.split(":");
+    sortRequirement[parts[0]] = parts[1] === "desc" ? -1 : 1;
   }
 
   try {
-    const proposals = await Proposal.find({ owner: res.locals.user._id })
+    const proposals = await Proposal.find({
+      owner: res.locals.user._id,
+      active,
+    })
       .skip(page * limit)
-      .limit(limit);
+      .limit(limit)
+      .sort(sortRequirement);
 
     res.status(StatusCodes.OK).json(proposals);
   } catch (err) {
