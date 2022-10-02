@@ -48,8 +48,17 @@ export const getAllProposals = async (
   res: Response,
   next: NextFunction
 ) => {
+  const match: any = {};
+  const page = parseInt(req.params.page) || 0;
+  const limit = parseInt(req.params.limit) || 10;
+  if (req.query.active) {
+    match.active = req.query.active === "true";
+  }
+
   try {
-    const proposals = await Proposal.find({ owner: res.locals.user._id });
+    const proposals = await Proposal.find({ owner: res.locals.user._id })
+      .skip(page * limit)
+      .limit(limit);
 
     res.status(StatusCodes.OK).json(proposals);
   } catch (err) {
