@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import validator from "validator";
-import bcrypt from "bcrypt";
+import Proposal from "./ProposalModel";
 
 const userSchema = new mongoose.Schema(
   {
@@ -25,9 +25,28 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     tokens: [{ token: { type: String, required: true } }],
-    proposalsVoted: [{ proposalId: String, optionId: String }],
+    proposalsVoted: [
+      {
+        proposalId: {
+          type: mongoose.Schema.Types.ObjectId,
+        },
+        optionId: {
+          type: mongoose.Schema.Types.ObjectId,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );
+
+userSchema.methods.toJSON = function () {
+  const user = this;
+  const userObject = user.toObject();
+
+  delete userObject.password;
+  delete userObject.tokens;
+
+  return userObject;
+};
 
 export default mongoose.model("User", userSchema);

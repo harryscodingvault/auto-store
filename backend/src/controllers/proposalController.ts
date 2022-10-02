@@ -9,7 +9,10 @@ export const createProposal = async (
   res: Response,
   next: NextFunction
 ) => {
-  const newProposal = await new Proposal(req.body).save();
+  const newProposal = await new Proposal({
+    ...req.body,
+    creator: res.locals.user._id,
+  }).save();
 
   try {
     res.status(StatusCodes.OK).json(newProposal);
@@ -25,11 +28,15 @@ export const getProposal = async (
 ) => {
   try {
     const _id = req.params.id;
-    const proposal = await Proposal.findById(_id);
+    const proposal: any = await Proposal.findOne({
+      _id,
+      owner: res.locals.user._id,
+    });
 
     if (!proposal) {
       return res.status(StatusCodes.NOT_FOUND).send();
     }
+
     res.status(StatusCodes.OK).json(proposal);
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
@@ -42,7 +49,7 @@ export const getAllProposals = async (
   next: NextFunction
 ) => {
   try {
-    const proposals = await Proposal.find();
+    const proposals = await Proposal.find({ owner: res.locals.user._id });
 
     res.status(StatusCodes.OK).json(proposals);
   } catch (err) {
@@ -67,14 +74,16 @@ export const updateProposal = async (
 
   try {
     const _id = req.params.id;
-
-    const proposal = await Proposal.findByIdAndUpdate(_id, req.body, {
-      new: true,
-      runValidators: true,
+    const proposal: any = await Proposal.findOne({
+      _id,
+      creator: res.locals.user._id,
     });
     if (!proposal) {
       return res.status(StatusCodes.NOT_FOUND).send({ error: "Not Found" });
     }
+    updates.forEach((update) => (proposal[update] = req.body[update]));
+    await proposal.save();
+
     res.status(StatusCodes.OK).json(proposal);
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error);
@@ -89,7 +98,10 @@ export const deleteProposal = async (
   try {
     const _id = req.params.id;
 
-    const proposal = await Proposal.findByIdAndDelete(_id);
+    const proposal = await Proposal.findOneAndDelete({
+      _id,
+      creator: res.locals.user._id,
+    });
     if (!proposal) {
       return res
         .status(StatusCodes.NOT_FOUND)

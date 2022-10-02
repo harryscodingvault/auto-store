@@ -7,14 +7,18 @@ import {
   getProposal,
   updateProposal,
 } from "../controllers/proposalController";
+import { authenticateUser } from "../middleware/auth";
 
 const router = express.Router();
 
 router
   .route("/:id")
-  .get(getProposal)
-  .patch(updateProposal)
-  .delete(deleteProposal);
-router.route("/").post(createProposal).get(getAllProposals);
+  .get(authenticateUser, getProposal)
+  .patch(authenticateUser, updateProposal)
+  .delete(authenticateUser, deleteProposal);
+router
+  .route("/")
+  .post(authenticateUser, createProposal)
+  .get(authenticateUser, getAllProposals);
 
 export default router;

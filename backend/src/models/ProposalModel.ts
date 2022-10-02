@@ -1,10 +1,12 @@
 import mongoose from "mongoose";
+import User from "./UserModel";
 
 const proposalSchema = new mongoose.Schema(
   {
-    creatorId: {
-      type: String,
+    creator: {
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
+      ref: User,
     },
     title: {
       type: String,

@@ -35,7 +35,6 @@ export const createUser = async (
       username: newUser.username,
       email: newUser.email,
       _id: newUser._id,
-      tokens: newUser.tokens,
       token,
     });
   } catch (error) {
@@ -75,7 +74,6 @@ export const loginUser = async (
       username: userExist.username,
       email: userExist.email,
       _id: userExist._id,
-      tokens: userExist.tokens,
       token,
     });
   } catch (error) {
