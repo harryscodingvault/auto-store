@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { StatusCodes } from "http-status-codes";
 import { comparePassword, createNewPassword } from "../utils/passwordHandler";
 import { createJWT } from "../utils/jwtHandler";
+import { sendWelcomeEmail } from "../email/account";
 
 export const createUser = async (
   req: Request,
@@ -30,6 +31,7 @@ export const createUser = async (
     const token = await createJWT(newUser._id);
     newUser.tokens = newUser.tokens.concat({ token });
     await newUser.save();
+    sendWelcomeEmail(newUser.email, newUser.username);
 
     res.status(StatusCodes.OK).json({
       username: newUser.username,
