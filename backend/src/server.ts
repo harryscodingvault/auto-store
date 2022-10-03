@@ -2,8 +2,7 @@ import express from "express";
 import http from "http";
 import cors from "cors";
 import socketioApp from "./socketio/socketio";
-import session from "express-session";
-import passport from "passport";
+
 import dotenv from "dotenv";
 dotenv.config();
 // DB
