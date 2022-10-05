@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import User from "./UserModel";
+import Option from "./OptionModel";
 
 const proposalSchema = new mongoose.Schema(
   {
@@ -34,11 +35,17 @@ const proposalSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    chosenProposal: {
-      type: String,
-      default: null,
+    editOn: {
+      type: Boolean,
+      default: true,
     },
-    options: [{ count: { type: Number, default: 0 }, name: String }],
+    chosenProposal: {
+      type: [{ type: mongoose.Schema.Types.ObjectId }],
+      default: [],
+    },
+    options: [
+      { type: mongoose.Schema.Types.ObjectId, required: true, ref: Option },
+    ],
     totalVotes: { type: Number, default: 0 },
   },
   { timestamps: true }

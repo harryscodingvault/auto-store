@@ -15,7 +15,7 @@ export const addVote = async (
   const _id = req.params.id;
 
   try {
-    const proposal: any = await Proposal.findOne({
+    let proposal: any = await Proposal.findOne({
       _id,
     });
 
@@ -23,15 +23,20 @@ export const addVote = async (
       return res.status(StatusCodes.NOT_FOUND).send({ error: "Not Found" });
     }
 
+    if (!proposal.active) {
+      return res
+        .status(StatusCodes.METHOD_NOT_ALLOWED)
+        .send({ error: "Proposal expired" });
+    }
+
     const issuedVote: any = await Voter.findOne({
       voterId: userId,
       proposalId: _id,
     });
 
+    // VOTING MECHANISM
     if (issuedVote.optionId !== null) {
       if (issuedVote.optionId.equals(optionId)) {
-        issuedVote.optionId = null;
-        await issuedVote.save();
         await Proposal.updateOne(
           {
             _id,
@@ -39,15 +44,17 @@ export const addVote = async (
           },
           { $inc: { "options.$.count": -1 } }
         );
+        issuedVote.optionId = null;
+        await issuedVote.save();
       } else {
-        await Proposal.updateMany(
+        await Proposal.updateOne(
           {
             _id,
             "options._id": issuedVote.optionId,
           },
           { $inc: { "options.$.count": -1 } }
         );
-        await Proposal.updateMany(
+        await Proposal.updateOne(
           {
             _id,
             "options._id": optionId,
@@ -69,7 +76,42 @@ export const addVote = async (
         { $inc: { "options.$.count": 1 } }
       );
     }
-    res.status(StatusCodes.OK).json(issuedVote);
+
+    //UPDATE TOTAL VOTE COUNT
+    const count = await Voter.find({
+      proposalId: proposal._id,
+      optionId: { $ne: null },
+    }).count();
+
+    proposal = await Proposal.findOne({
+      _id,
+    });
+    console.log("coming winner");
+    const winner = await proposal.aggregate([
+      {
+        $options: {
+          MaxValues: { max: "count" },
+        },
+      },
+    ]);
+
+    console.log({ winner });
+
+    if (count >= proposal.capacity) {
+      await proposal.updateOne({
+        active: false,
+      });
+      await proposal.updateOne({
+        totalVotes: proposal.capacity,
+      });
+    } else {
+      await proposal.updateOne({ totalVotes: count, editOn: false });
+      proposal = await Proposal.findOne({
+        _id,
+      });
+    }
+
+    res.status(StatusCodes.OK).json({ proposal, optionId });
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error);
   }
