@@ -3,13 +3,16 @@ import express from "express";
 import {
   createProposal,
   deleteProposal,
-  getAllProposals,
+  getVotedProposals,
   getProposal,
   updateProposal,
+  getCreatedProposals,
 } from "../controllers/proposalController";
 import { authenticateUser } from "../middleware/auth";
 
 const router = express.Router();
+
+router.route("/me").get(getCreatedProposals);
 
 router
   .route("/:id")
@@ -19,6 +22,6 @@ router
 router
   .route("/")
   .post(authenticateUser, createProposal)
-  .get(authenticateUser, getAllProposals);
+  .get(authenticateUser, getVotedProposals);
 
 export default router;

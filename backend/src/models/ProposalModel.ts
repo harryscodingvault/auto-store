@@ -14,7 +14,7 @@ const proposalSchema = new mongoose.Schema(
       trim: true,
     },
     deadline: {
-      type: Date,
+      type: String,
       required: true,
     },
     capacity: {
@@ -22,10 +22,14 @@ const proposalSchema = new mongoose.Schema(
       required: true,
       validate(value: Number) {
         if (value < 2) {
-          throw new Error("Age must be a positive number!");
+          throw new Error("Capacity must be a over 2!");
+        }
+        if (value > 100) {
+          throw new Error("Capacity must be a under 100!");
         }
       },
     },
+
     active: {
       type: Boolean,
       default: true,
@@ -34,11 +38,8 @@ const proposalSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
-    voters: {
-      type: [String],
-      default: [],
-    },
-    options: [{ votes: [String], name: String }],
+    options: [{ count: { type: Number, default: 0 }, name: String }],
+    totalVotes: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

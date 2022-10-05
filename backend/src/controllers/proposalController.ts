@@ -3,18 +3,26 @@ import User from "../models/UserModel";
 import bcrypt from "bcrypt";
 import { StatusCodes } from "http-status-codes";
 import Proposal from "../models/ProposalModel";
+import Voter from "../models/VoterModel";
 
 export const createProposal = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const newProposal = await new Proposal({
-    ...req.body,
-    creator: res.locals.user._id,
-  }).save();
+  const userId = res.locals.user._id;
 
   try {
+    const newProposal = await new Proposal({
+      ...req.body,
+      creator: userId,
+    }).save();
+
+    await new Voter({
+      voterId: userId,
+      proposalId: newProposal._id,
+    }).save();
+
     res.status(StatusCodes.OK).json(newProposal);
   } catch (err) {
     res.status(StatusCodes.NOT_ACCEPTABLE).send();
@@ -26,15 +34,25 @@ export const getProposal = async (
   res: Response,
   next: NextFunction
 ) => {
+  const userId = res.locals.user._id;
+  const _id = req.params.id;
   try {
-    const _id = req.params.id;
     const proposal: any = await Proposal.findOne({
       _id,
-      owner: res.locals.user._id,
     });
 
     if (!proposal) {
       return res.status(StatusCodes.NOT_FOUND).send();
+    }
+    const issuedVote = await Voter.findOne({
+      voterId: userId,
+      proposalId: _id,
+    });
+    if (!issuedVote) {
+      await new Voter({
+        voterId: userId,
+        proposalId: _id,
+      }).save();
     }
 
     res.status(StatusCodes.OK).json(proposal);
@@ -43,7 +61,39 @@ export const getProposal = async (
   }
 };
 
-export const getAllProposals = async (
+export const getVotedProposals = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  // SORTING PAGINATION
+  const page = parseInt(req.params.page) || 0;
+  const limit = parseInt(req.params.limit) || 10;
+  const active = req.query.active || true;
+  const sortRequirement: any = {};
+  const sortQ: any = req.query.sortBy;
+
+  if (sortQ) {
+    const parts: any = sortQ.split(":");
+    sortRequirement[parts[0]] = parts[1] === "desc" ? -1 : 1;
+  }
+
+  try {
+    const proposals = await Proposal.find({
+      owner: res.locals.user._id,
+      active,
+    })
+      .skip(page * limit)
+      .limit(limit)
+      .sort(sortRequirement);
+
+    res.status(StatusCodes.OK).json(proposals);
+  } catch (err) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+  }
+};
+
+export const getCreatedProposals = async (
   req: Request,
   res: Response,
   next: NextFunction

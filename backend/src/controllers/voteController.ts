@@ -15,7 +15,7 @@ export const addVote = async (
   const _id = req.params.id;
 
   try {
-    const proposal = await Proposal.findOne({
+    const proposal: any = await Proposal.findOne({
       _id,
     });
 
@@ -23,14 +23,53 @@ export const addVote = async (
       return res.status(StatusCodes.NOT_FOUND).send({ error: "Not Found" });
     }
 
-    const issuedVote = await Voter.findOne({
+    const issuedVote: any = await Voter.findOne({
       voterId: userId,
       proposalId: _id,
     });
 
-    if (issuedVote) {
+    if (issuedVote.optionId !== null) {
+      if (issuedVote.optionId.equals(optionId)) {
+        issuedVote.optionId = null;
+        await issuedVote.save();
+        await Proposal.updateOne(
+          {
+            _id,
+            "options._id": optionId,
+          },
+          { $inc: { "options.$.count": -1 } }
+        );
+      } else {
+        await Proposal.updateMany(
+          {
+            _id,
+            "options._id": issuedVote.optionId,
+          },
+          { $inc: { "options.$.count": -1 } }
+        );
+        await Proposal.updateMany(
+          {
+            _id,
+            "options._id": optionId,
+          },
+          { $inc: { "options.$.count": 1 } }
+        );
+        issuedVote.optionId = optionId;
+        await issuedVote.save();
+      }
+    } else {
+      issuedVote.optionId = optionId;
+      await issuedVote.save();
+
+      await Proposal.updateOne(
+        {
+          _id,
+          "options._id": optionId,
+        },
+        { $inc: { "options.$.count": 1 } }
+      );
     }
-    res.status(StatusCodes.OK).json(proposal);
+    res.status(StatusCodes.OK).json(issuedVote);
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error);
   }

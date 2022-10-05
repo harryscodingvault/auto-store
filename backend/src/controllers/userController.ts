@@ -10,7 +10,6 @@ export const getUser = async (
   next: NextFunction
 ) => {
   const user = res.locals.user;
-  await user.populate("proposals").execPopulate();
 
   res.status(StatusCodes.OK).json(user);
 };

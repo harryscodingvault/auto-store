@@ -25,16 +25,6 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     tokens: [{ token: { type: String, required: true } }],
-    proposalsVoted: [
-      {
-        proposalId: {
-          type: mongoose.Schema.Types.ObjectId,
-        },
-        optionId: {
-          type: mongoose.Schema.Types.ObjectId,
-        },
-      },
-    ],
   },
   { timestamps: true }
 );
