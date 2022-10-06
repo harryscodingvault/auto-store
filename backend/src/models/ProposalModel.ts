@@ -43,9 +43,10 @@ const proposalSchema = new mongoose.Schema(
       type: [{ type: mongoose.Schema.Types.ObjectId }],
       default: [],
     },
-    options: [
-      { type: mongoose.Schema.Types.ObjectId, required: true, ref: Option },
-    ],
+    options: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: Option }],
+      default: [],
+    },
     totalVotes: { type: Number, default: 0 },
   },
   { timestamps: true }

@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { StatusCodes } from "http-status-codes";
 import Proposal from "../models/ProposalModel";
 import Voter from "../models/VoterModel";
+import Option from "../models/OptionModel";
 
 export const addVote = async (
   req: Request,
@@ -37,29 +38,26 @@ export const addVote = async (
     // VOTING MECHANISM
     if (issuedVote.optionId !== null) {
       if (issuedVote.optionId.equals(optionId)) {
-        await Proposal.updateOne(
+        await Option.updateOne(
           {
-            _id,
-            "options._id": optionId,
+            _id: optionId,
           },
-          { $inc: { "options.$.count": -1 } }
+          { $inc: { count: -1 } }
         );
         issuedVote.optionId = null;
         await issuedVote.save();
       } else {
-        await Proposal.updateOne(
+        await Option.updateOne(
           {
-            _id,
-            "options._id": issuedVote.optionId,
+            _id: issuedVote.optionId,
           },
-          { $inc: { "options.$.count": -1 } }
+          { $inc: { count: -1 } }
         );
-        await Proposal.updateOne(
+        await Option.updateOne(
           {
-            _id,
-            "options._id": optionId,
+            _id: optionId,
           },
-          { $inc: { "options.$.count": 1 } }
+          { $inc: { count: 1 } }
         );
         issuedVote.optionId = optionId;
         await issuedVote.save();
@@ -68,12 +66,11 @@ export const addVote = async (
       issuedVote.optionId = optionId;
       await issuedVote.save();
 
-      await Proposal.updateOne(
+      await Option.updateOne(
         {
-          _id,
-          "options._id": optionId,
+          _id: optionId,
         },
-        { $inc: { "options.$.count": 1 } }
+        { $inc: { count: 1 } }
       );
     }
 
@@ -83,35 +80,30 @@ export const addVote = async (
       optionId: { $ne: null },
     }).count();
 
-    proposal = await Proposal.findOne({
-      _id,
-    });
-    console.log("coming winner");
-    const winner = await proposal.aggregate([
-      {
-        $options: {
-          MaxValues: { max: "count" },
-        },
-      },
-    ]);
-
-    console.log({ winner });
-
     if (count >= proposal.capacity) {
-      await proposal.updateOne({
-        active: false,
+      // MAX ITEMS
+      const maxValOption: any = await Option.findOne({ proposalId: _id })
+        .sort({ count: -1 })
+        .limit(1);
+
+      const allMaxOptions = await Option.find({
+        proposalId: _id,
+        count: maxValOption.count,
       });
       await proposal.updateOne({
+        active: false,
         totalVotes: proposal.capacity,
+        chosenProposal: allMaxOptions,
       });
     } else {
       await proposal.updateOne({ totalVotes: count, editOn: false });
-      proposal = await Proposal.findOne({
-        _id,
-      });
     }
 
-    res.status(StatusCodes.OK).json({ proposal, optionId });
+    proposal = await Proposal.findOne({
+      _id,
+    });
+
+    res.status(StatusCodes.OK).json(proposal);
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(error);
   }

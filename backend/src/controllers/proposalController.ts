@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { StatusCodes } from "http-status-codes";
 import Proposal from "../models/ProposalModel";
 import Voter from "../models/VoterModel";
+import Option from "../models/OptionModel";
 
 export const createProposal = async (
   req: Request,
@@ -11,12 +12,26 @@ export const createProposal = async (
   next: NextFunction
 ) => {
   const userId = res.locals.user._id;
-
+  const { title, deadline, capacity, options } = req.body;
   try {
-    const newProposal = await new Proposal({
-      ...req.body,
+    let newProposal = await new Proposal({
+      title,
+      deadline,
+      capacity,
       creator: userId,
     }).save();
+
+    const addedOptions = await Option.insertMany(
+      options.map((item: any) => {
+        return {
+          proposalId: newProposal._id,
+          name: item.name,
+        };
+      })
+    );
+    await newProposal.updateOne({
+      options: addedOptions.map((item: any) => item._id),
+    });
 
     await new Voter({
       voterId: userId,
@@ -54,8 +69,20 @@ export const getProposal = async (
         proposalId: _id,
       }).save();
     }
+    const options = await Option.find({ proposalId: _id });
 
-    res.status(StatusCodes.OK).json(proposal);
+    res.status(StatusCodes.OK).json({
+      creator_id: proposal.creator_id,
+      proposalId: proposal._id,
+      title: proposal.title,
+      deadline: proposal.deadline,
+      capacity: proposal.capacity,
+      active: proposal.active,
+      editOn: proposal.editOn,
+      options: options,
+      chosenProposal: proposal.chosenProposal,
+      totalVotes: proposal.totalVotes,
+    });
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
   }
