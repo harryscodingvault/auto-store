@@ -5,6 +5,7 @@ import { StatusCodes } from "http-status-codes";
 import Proposal from "../models/ProposalModel";
 import Voter from "../models/VoterModel";
 import Option from "../models/OptionModel";
+import { sendResultEmail } from "../email/account";
 
 // CREATE PROPOSAL
 export const createProposal = async (
@@ -53,6 +54,7 @@ export const getProposal = async (
 ) => {
   const userId = res.locals.user._id;
   const _id = req.params.id;
+
   try {
     const proposal: any = await Proposal.findOne(
       {
@@ -85,9 +87,6 @@ export const getProposal = async (
         proposalId: _id,
       }).save();
     }
-    // const options = await Option.find({ proposalId: _id }).select("name");
-
-    //proposal.options = options;
 
     res.status(StatusCodes.OK).json(proposal);
   } catch (err) {

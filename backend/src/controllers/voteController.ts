@@ -1,10 +1,10 @@
 import express, { NextFunction, Request, Response } from "express";
-import User from "../models/UserModel";
-import bcrypt from "bcrypt";
+
 import { StatusCodes } from "http-status-codes";
 import Proposal from "../models/ProposalModel";
 import Voter from "../models/VoterModel";
 import Option from "../models/OptionModel";
+import { closeProposalOnCapacity } from "../services/db_watch";
 
 export const addVote = async (
   req: Request,
@@ -73,35 +73,11 @@ export const addVote = async (
         { $inc: { count: 1 } }
       );
     }
-
-    //UPDATE TOTAL VOTE COUNT
-    const count = await Voter.find({
-      proposalId: proposal._id,
-      optionId: { $ne: null },
-    }).count();
-
-    if (count >= proposal.capacity) {
-      // MAX ITEMS
-      const maxValOption: any = await Option.findOne({ proposalId: _id })
-        .sort({ count: -1 })
-        .limit(1);
-
-      const allMaxOptions = await Option.find({
-        proposalId: _id,
-        count: maxValOption.count,
-      });
-      await proposal.updateOne({
-        active: false,
-        totalVotes: proposal.capacity,
-        chosenProposal: allMaxOptions,
-      });
-    } else {
-      await proposal.updateOne({ totalVotes: count, editOn: false });
-    }
+    closeProposalOnCapacity(proposal);
 
     proposal = await Proposal.findOne({
       _id,
-    });
+    }).populate("options", "name");
 
     res.status(StatusCodes.OK).json(proposal);
   } catch (error) {

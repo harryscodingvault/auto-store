@@ -40,7 +40,12 @@ const proposalSchema = new mongoose.Schema(
       default: true,
     },
     chosenProposal: {
-      type: [{ type: mongoose.Schema.Types.ObjectId }],
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: Option,
+        },
+      ],
       default: [],
     },
     options: {

@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
 import User from "../models/UserModel";
-import bcrypt from "bcrypt";
+
 import { StatusCodes } from "http-status-codes";
 import { comparePassword, createNewPassword } from "../utils/passwordHandler";
 import { createJWT } from "../utils/jwtHandler";
