@@ -6,6 +6,7 @@ import Proposal from "../models/ProposalModel";
 import Voter from "../models/VoterModel";
 import Option from "../models/OptionModel";
 
+// CREATE PROPOSAL
 export const createProposal = async (
   req: Request,
   res: Response,
@@ -29,9 +30,9 @@ export const createProposal = async (
         };
       })
     );
-    await newProposal.updateOne({
-      options: addedOptions.map((item: any) => item._id),
-    });
+
+    newProposal.options = addedOptions.map((item: any) => item._id);
+    newProposal.save();
 
     await new Voter({
       voterId: userId,
@@ -44,6 +45,7 @@ export const createProposal = async (
   }
 };
 
+// GET PROPOSAL
 export const getProposal = async (
   req: Request,
   res: Response,
@@ -52,9 +54,22 @@ export const getProposal = async (
   const userId = res.locals.user._id;
   const _id = req.params.id;
   try {
-    const proposal: any = await Proposal.findOne({
-      _id,
-    });
+    const proposal: any = await Proposal.findOne(
+      {
+        _id,
+      },
+      {
+        proposalId: 1,
+        title: 1,
+        deadline: 1,
+        capacity: 1,
+        active: 1,
+        editOn: 1,
+        options: 1,
+        chosenProposal: 1,
+        totalVotes: 1,
+      }
+    ).populate("options", "name");
 
     if (!proposal) {
       return res.status(StatusCodes.NOT_FOUND).send();
@@ -63,28 +78,20 @@ export const getProposal = async (
       voterId: userId,
       proposalId: _id,
     });
+
     if (!issuedVote) {
       await new Voter({
         voterId: userId,
         proposalId: _id,
       }).save();
     }
-    const options = await Option.find({ proposalId: _id });
+    // const options = await Option.find({ proposalId: _id }).select("name");
 
-    res.status(StatusCodes.OK).json({
-      creator_id: proposal.creator_id,
-      proposalId: proposal._id,
-      title: proposal.title,
-      deadline: proposal.deadline,
-      capacity: proposal.capacity,
-      active: proposal.active,
-      editOn: proposal.editOn,
-      options: options,
-      chosenProposal: proposal.chosenProposal,
-      totalVotes: proposal.totalVotes,
-    });
+    //proposal.options = options;
+
+    res.status(StatusCodes.OK).json(proposal);
   } catch (err) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(err);
   }
 };
 
@@ -187,7 +194,7 @@ export const updateProposal = async (
     );
 
     updates.forEach((update) => (proposal[update] = req.body[update]));
-    proposal.options = newOptions.map((item: any) => item._id);
+    proposal.options = newOptions;
     await proposal.save();
 
     res.status(StatusCodes.OK).json(proposal);
