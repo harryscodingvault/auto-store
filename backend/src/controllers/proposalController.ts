@@ -157,6 +157,7 @@ export const updateProposal = async (
   res: Response,
   next: NextFunction
 ) => {
+  const _id = req.params.id;
   const updates = Object.keys(req.body);
   const allowedUpdates = ["options", "capacity", "title", "deadline"];
   const isValidOperation = updates.every((update) =>
@@ -168,7 +169,6 @@ export const updateProposal = async (
   }
 
   try {
-    const _id = req.params.id;
     const proposal: any = await Proposal.findOne({
       _id,
       creator: res.locals.user._id,
@@ -176,7 +176,18 @@ export const updateProposal = async (
     if (!proposal) {
       return res.status(StatusCodes.NOT_FOUND).send({ error: "Not Found" });
     }
+    await Option.deleteMany({ proposalId: _id });
+    const newOptions = await Option.insertMany(
+      req.body.options.map((item: any) => {
+        return {
+          proposalId: _id,
+          name: item.name,
+        };
+      })
+    );
+
     updates.forEach((update) => (proposal[update] = req.body[update]));
+    proposal.options = newOptions.map((item: any) => item._id);
     await proposal.save();
 
     res.status(StatusCodes.OK).json(proposal);
@@ -197,11 +208,13 @@ export const deleteProposal = async (
       _id,
       creator: res.locals.user._id,
     });
+
     if (!proposal) {
       return res
         .status(StatusCodes.NOT_FOUND)
         .send({ error: "No proposal found" });
     }
+    await Option.deleteMany({ proposalId: _id });
     res.status(StatusCodes.OK).json(proposal);
   } catch (error) {
     res.status(StatusCodes.BAD_REQUEST).send(error);
