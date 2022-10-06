@@ -5,7 +5,7 @@ import { StatusCodes } from "http-status-codes";
 import Proposal from "../models/ProposalModel";
 import Voter from "../models/VoterModel";
 import Option from "../models/OptionModel";
-import { sendResultEmail } from "../email/account";
+import { scheduleProposalClosing } from "../utils/scheduleDeadline";
 
 // CREATE PROPOSAL
 export const createProposal = async (
@@ -40,6 +40,7 @@ export const createProposal = async (
       proposalId: newProposal._id,
     }).save();
 
+    scheduleProposalClosing(newProposal._id, deadline);
     res.status(StatusCodes.OK).json(newProposal);
   } catch (err) {
     res.status(StatusCodes.NOT_ACCEPTABLE).send();

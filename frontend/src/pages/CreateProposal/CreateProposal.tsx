@@ -27,7 +27,7 @@ const initialErrorState = {
 
 const CreateProposal = () => {
   const [values, setValues] = useState(initialValuesState);
-  const [proposals, setProposals] = useState(initialValuesOptions);
+  const [options, setOptions] = useState(initialValuesOptions);
   const [errorMessages, setErrorMessages] = useState(initialErrorState);
   const navigate = useNavigate();
 
@@ -38,9 +38,9 @@ const CreateProposal = () => {
   };
   const arrayChangeHandler = (e: React.FormEvent, index: number) => {
     const value = (e.target as HTMLInputElement).value;
-    const list = [...proposals];
+    const list = [...options];
     list[index] = value;
-    setProposals([...list]);
+    setOptions([...list]);
   };
 
   const checkValues = () => {
@@ -71,8 +71,8 @@ const CreateProposal = () => {
       verifiedData = false;
       capacityM = "2=<capacity<=100";
     }
-    proposals.map((item, index) => {
-      if (proposals[index].trim() === "") {
+    options.map((item, index) => {
+      if (options[index].trim() === "") {
         verifiedData = false;
         optionsM[index] = "Empty value";
       } else {
@@ -95,7 +95,14 @@ const CreateProposal = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (checkValues()) {
-      console.log("register", { data: values, proposal: proposals });
+      console.log("register", {
+        title: values.title,
+        deadline: new Date(
+          `${values.date_req} ${values.time_req}`
+        ).toISOString(),
+        capacity: values.capacity,
+        options: options,
+      });
     }
   };
 
@@ -141,7 +148,7 @@ const CreateProposal = () => {
         />
         <div className="option-list">
           <h5>Options</h5>
-          {proposals.map((item, index) => (
+          {options.map((item, index) => (
             <div className="option-input" key={index}>
               <FormInput
                 name={`option-${index}`}
@@ -149,14 +156,14 @@ const CreateProposal = () => {
                 label={`Option ${index + 1}`}
                 required={true}
                 errorMessage={errorMessages.optionsM[index]}
-                value={proposals[index]}
+                value={options[index]}
                 handleChange={(e) => arrayChangeHandler(e, index)}
               />
-              {proposals.length > 2 && (
+              {options.length > 2 && (
                 <div
                   className="btn"
                   onClick={() =>
-                    setProposals(proposals.filter((item, i) => i !== index))
+                    setOptions(options.filter((item, i) => i !== index))
                   }
                 >
                   X
@@ -165,11 +172,11 @@ const CreateProposal = () => {
             </div>
           ))}
         </div>
-        {proposals.length < 100 && (
+        {options.length < 100 && (
           <button
             type="button"
             className="btn"
-            onClick={() => setProposals([...proposals, ""])}
+            onClick={() => setOptions([...options, ""])}
           >
             <h5>New Option</h5>
           </button>

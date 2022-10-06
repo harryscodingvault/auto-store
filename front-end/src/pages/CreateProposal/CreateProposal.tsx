@@ -28,7 +28,7 @@ const CreateProposal = () => {
   };
 
   const checkValues = () => {
-    const { title, capacity, passing_vote_req } = values;
+    const { title, capacity } = values;
 
     let verifiedData = true;
     let titleM = "",
@@ -39,10 +39,9 @@ const CreateProposal = () => {
       verifiedData = false;
       titleM = "A title is required!";
     }
-    if (capacity < passing_vote_req) {
+    if (capacity < 2) {
       verifiedData = false;
-      capacityM = "Capacity has to be bigger than passing votes!";
-      passing_vote_reqM = "Capacity has to be bigger than passing votes!";
+      capacityM = "Capacity has to be bigger than 2!";
     }
     setErrorMessages({
       ...errorMessages,
@@ -57,7 +56,7 @@ const CreateProposal = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (checkValues()) {
-      console.log("register", { data: values });
+      console.log("register", {});
     }
   };
 

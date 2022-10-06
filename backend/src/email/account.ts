@@ -32,17 +32,22 @@ export const sendResultEmail = async (_id: any) => {
     return voter.voterId.email;
   });
 
+  const emailText =
+    optionsSelected[0].count === 0
+      ? "Deadline passed, no option selected"
+      : `The proposal ${proposal.title} passed with ${
+          optionsSelected[0].count
+        } votes on  ${
+          optionsSelected.length > 1
+            ? optionsSelected.map((item) => item.name).join(", ")
+            : optionsSelected[0].name
+        } .\n Link:`;
+
   const msg: any = {
     to: emails,
     from: "harry@harrys.one",
     subject: `Results to ${proposal.title} proposal`,
-    text: `The proposal ${proposal.title} passed with ${
-      optionsSelected[0].count
-    } votes on  ${
-      optionsSelected.length > 1
-        ? optionsSelected.map((item) => item.name).join(", ")
-        : optionsSelected[0].name
-    } .\n Link:`,
+    text: emailText,
   };
 
   sgMail

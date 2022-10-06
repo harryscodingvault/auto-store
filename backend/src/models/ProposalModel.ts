@@ -15,7 +15,7 @@ const proposalSchema = new mongoose.Schema(
       trim: true,
     },
     deadline: {
-      type: String,
+      type: Date,
       required: true,
     },
     capacity: {
