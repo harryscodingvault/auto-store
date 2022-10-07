@@ -18,12 +18,16 @@ const Landing = () => {
           <p>3) Vote and share</p>
         </li>
       </ul>
-
-      <div
-        className="btn google-btn"
-        onClick={() => navigate("home/proposals/current")}
-      >
-        <h5>Google SignIn</h5>
+      <div className="btn-group">
+        <div className="btn" onClick={() => navigate("registration")}>
+          <h5>Login/Register</h5>
+        </div>
+        <div
+          className="btn google-btn"
+          onClick={() => navigate("home/proposals/current")}
+        >
+          <h5>Google SignIn</h5>
+        </div>
       </div>
     </Wrapper>
   );

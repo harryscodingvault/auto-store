@@ -12,17 +12,30 @@ export const Wrapper = styled.div`
   ul {
     color: var(--secondary-500);
   }
-  .google-btn {
-    border: 1px solid var(--secondary-500);
-    background-color: var(--red-dark);
-    > h5 {
-      color: var(--secondary-500);
-    }
-    :hover {
-      background-color: var(--red-light);
-    }
-    :active {
-      background-color: var(--red-light);
+  .btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    .google-btn {
+      border: 1px solid var(--secondary-500);
+      background-color: var(--red-dark);
+      > h5 {
+        color: var(--secondary-500);
+      }
+      :hover {
+        background-color: var(--secondary-500);
+        border: 1px solid var(--red-dark);
+        > h5 {
+          color: var(--red-dark);
+        }
+      }
+      :active {
+        background-color: var(--secondary-100);
+        border: 1px solid var(--red-dark);
+        > h5 {
+          color: var(--red-dark);
+        }
+      }
     }
   }
 `;

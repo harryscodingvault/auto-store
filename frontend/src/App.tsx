@@ -11,12 +11,14 @@ import CurrentProposals from "./pages/CurrentProposals/CurrentProposals";
 import OldProposals from "./pages/OldProposals/OldProposals";
 import CreateProposal from "./pages/CreateProposal/CreateProposal";
 import Profile from "./pages/Profile/Profile";
+import Registration from "./pages/Registration/Registration";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/">
+          <Route path="registration" element={<Registration />} />
           <Route index element={<Landing />} />
           <Route path="home" element={<Layout />}>
             <Route path="proposals" element={<ProposalsLayout />}>

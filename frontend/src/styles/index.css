@@ -97,6 +97,9 @@ ul {
 }
 
 /* form */
+.form-title {
+  color: var(--secondary-500);
+}
 
 .form-label {
   display: block;
