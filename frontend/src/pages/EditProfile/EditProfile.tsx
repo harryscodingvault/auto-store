@@ -5,6 +5,7 @@ import FormInput from "../../components/FormComponents/FormInput/FormInput";
 import { Wrapper } from "./EditProfile.style";
 import { useSelector, useDispatch } from "react-redux";
 import { editUser } from "../../redux/user/userSlice";
+import Modal from "../../components/Modal/Modal";
 
 const initialErrorState = {
   usernameM: "",
@@ -17,7 +18,6 @@ const EditProfile = () => {
   const { user, isLoading, errorMessage } = useSelector(
     (store: any) => store.user
   );
-
   const initialValuesState = {
     username: user.username || "",
     email: user.email || "",
@@ -27,6 +27,7 @@ const EditProfile = () => {
   const [values, setValues] = useState(initialValuesState);
   const [errorMessages, setErrorMessages] = useState(initialErrorState);
   const navigate = useNavigate();
+  const [modal, setModal] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -74,8 +75,7 @@ const EditProfile = () => {
     return verifiedData;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     if (checkValues()) {
       const req_values = {
         username: values.username.trim(),
@@ -91,7 +91,14 @@ const EditProfile = () => {
 
   return (
     <Wrapper>
-      <form onSubmit={handleSubmit} className="form">
+      {modal && (
+        <Modal
+          title={"Do you want to update this profile?"}
+          ModalOn={setModal}
+          Action={() => handleSubmit()}
+        />
+      )}
+      <form className="form">
         <h5 className="form-title">Update Account</h5>
         <FormInput
           name="username"
@@ -131,7 +138,7 @@ const EditProfile = () => {
         />
 
         <div className="btn-group">
-          <button type="submit" className="btn">
+          <button type="button" className="btn" onClick={() => setModal(true)}>
             <h5>Update</h5>
           </button>
           <button type="button" className="btn" onClick={() => navigate(-1)}>
