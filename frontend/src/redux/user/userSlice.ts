@@ -59,6 +59,10 @@ export const editUser: any = createAsyncThunk(
       });
       return resp.data;
     } catch (error: any) {
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logoutUser());
+        return thunkAPI.rejectWithValue("Unauthorized! Logging out...");
+      }
       return thunkAPI.rejectWithValue(error.response.data.error);
     }
   }
@@ -75,6 +79,11 @@ export const deleteUser: any = createAsyncThunk(
       });
       return resp.data;
     } catch (error: any) {
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logoutUser());
+        return thunkAPI.rejectWithValue("Unauthorized! Logging out...");
+      }
+
       return thunkAPI.rejectWithValue(error.response.data.error);
     }
   }
