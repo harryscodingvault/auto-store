@@ -4,7 +4,7 @@ import validator from "validator";
 import FormInput from "../../components/FormComponents/FormInput/FormInput";
 import { Wrapper } from "./EditProfile.style";
 import { useSelector, useDispatch } from "react-redux";
-//import { editUser } from "../../redux/user/userSlice";
+import { editUser } from "../../redux/user/userSlice";
 
 const initialErrorState = {
   usernameM: "",
@@ -17,7 +17,7 @@ const EditProfile = () => {
   const { user, isLoading, errorMessage } = useSelector(
     (store: any) => store.user
   );
-  console.log(user.payload);
+
   const initialValuesState = {
     username: user.payload.username || null,
     email: user.payload.email || null,
@@ -83,7 +83,8 @@ const EditProfile = () => {
         password: values.password.trim(),
       };
 
-      //  dispatch(editUser(req_values));
+      dispatch(editUser(req_values));
+      navigate("/account/profile");
       return;
     }
   };

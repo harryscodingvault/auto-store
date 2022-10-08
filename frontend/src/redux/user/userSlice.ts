@@ -60,6 +60,18 @@ export const editUser: any = createAsyncThunk(
   }
 );
 
+export const deleteUser: any = createAsyncThunk(
+  "user/deleteUser",
+  async (_, thunkAPI) => {
+    try {
+      const resp = await originAPI.delete("user/me");
+      return resp.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response.data.error);
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -100,10 +112,23 @@ const userSlice = createSlice({
     [editUser.fulfilled]: (state, payload) => {
       state.isLoading = false;
       const user = payload;
-      state.user = null;
+      state.user = user;
       addUserToLocalStorage(user);
     },
     [editUser.rejected]: (state, payload) => {
+      state.isLoading = false;
+      state.errorMessage = payload;
+    },
+    //LOGOUT USER
+    [deleteUser.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [deleteUser.fulfilled]: (state) => {
+      state.isLoading = false;
+      state.user = null;
+      removeUserFromLocalStorage();
+    },
+    [deleteUser.rejected]: (state, payload) => {
       state.isLoading = false;
       state.errorMessage = payload;
     },
