@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect, useState } from "react";
 
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Landing from "./pages/Landing/Landing";
 import Home from "./pages/Home/Home";
@@ -12,23 +12,38 @@ import OldProposals from "./pages/OldProposals/OldProposals";
 import CreateProposal from "./pages/CreateProposal/CreateProposal";
 import Profile from "./pages/Profile/Profile";
 import Registration from "./pages/Registration/Registration";
+import ExpiredProposals from "./pages/ExpiredProposals/ExpiredProposals";
+import SearchProposals from "./pages/SearchProposals/SearchProposals";
+import ActiveProposals from "./pages/ActiveProposals/ActiveProposals";
+import HomeLayout from "./pages/HomeLayout/HomeLayout";
+import AccountLayout from "./pages/AccountLayout/AccountLayout";
+import EditProfile from "./pages/EditProfile/EditProfile";
+import LogoutPage from "./pages/LogoutPage/LogoutPage";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/">
-          <Route path="registration" element={<Registration />} />
           <Route index element={<Landing />} />
-          <Route path="home" element={<Layout />}>
-            <Route path="proposals" element={<ProposalsLayout />}>
-              <Route index element={<CurrentProposals />} />
-              <Route path="current" element={<CurrentProposals />} />
-              <Route path="old" element={<OldProposals />} />
+          <Route path="registration" element={<Registration />} />
+          <Route element={<Layout />}>
+            <Route path="home" element={<HomeLayout />}>
+              <Route path="active" element={<ActiveProposals />} />
+              <Route path="expired" element={<ExpiredProposals />} />
+              <Route path="search" element={<SearchProposals />} />
+            </Route>
+            <Route path="workshop" element={<ProposalsLayout />}>
+              <Route path="private" element={<CurrentProposals />} />
+              <Route path="shared" element={<OldProposals />} />
               <Route path="create" element={<CreateProposal />} />
             </Route>
 
-            <Route path="profile" element={<Profile />} />
+            <Route path="account" element={<AccountLayout />}>
+              <Route path="profile" element={<Profile />} />
+              <Route path="edit" element={<EditProfile />} />
+              <Route path="logout" element={<LogoutPage />} />
+            </Route>
           </Route>
         </Route>
 

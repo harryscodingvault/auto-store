@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import validator from "validator";
 import FormInput from "../../FormComponents/FormInput/FormInput";
 import { Wrapper } from "./Register.style";
+import { useSelector, useDispatch } from "react-redux";
+import { registerUser } from "../../../redux/user/userSlice";
 
 const initialValuesState = {
   username: "",
@@ -22,6 +24,8 @@ const Register = () => {
   const [values, setValues] = useState(initialValuesState);
   const [errorMessages, setErrorMessages] = useState(initialErrorState);
   const navigate = useNavigate();
+  const { user, isLoading } = useSelector((store: any) => store.user);
+  const dispatch = useDispatch();
 
   const handleChange = (e: React.FormEvent) => {
     const name = (e.target as HTMLInputElement).name;
@@ -70,11 +74,14 @@ const Register = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (checkValues()) {
-      console.log("Register", {
+      const req_values = {
         username: values.username.trim(),
         email: values.email.trim(),
         password: values.password.trim(),
-      });
+      };
+
+      dispatch(registerUser(req_values));
+      return;
     }
   };
 
@@ -127,6 +134,7 @@ const Register = () => {
             <h5>Cancel</h5>
           </button>
         </div>
+        {isLoading && <div className="spinner"></div>}
       </form>
     </Wrapper>
   );

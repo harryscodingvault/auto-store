@@ -3,6 +3,7 @@ import User from "../models/UserModel";
 
 import { StatusCodes } from "http-status-codes";
 import Proposal from "../models/ProposalModel";
+import { createNewPassword } from "../utils/passwordHandler";
 
 export const getUser = async (
   req: Request,
@@ -33,6 +34,8 @@ export const updateUser = async (
     const user = res.locals.user;
 
     updates.forEach((update) => (user[update] = req.body[update]));
+    const hashedPassword = await createNewPassword(req.body.password);
+    user.password = hashedPassword;
     await user?.save();
 
     res.status(StatusCodes.OK).json(user);

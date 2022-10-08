@@ -1,28 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import validator from "validator";
-import FormInput from "../../FormComponents/FormInput/FormInput";
-import { Wrapper } from "./Login.style";
+import FormInput from "../../components/FormComponents/FormInput/FormInput";
+import { Wrapper } from "./EditProfile.style";
 import { useSelector, useDispatch } from "react-redux";
-import { loginUser } from "../../../redux/user/userSlice";
-
-const initialValuesState = {
-  email: "",
-  password: "",
-};
+//import { editUser } from "../../redux/user/userSlice";
 
 const initialErrorState = {
+  usernameM: "",
   emailM: "",
   passwordM: "",
+  confirm_passwordM: "",
 };
 
-const Login = () => {
-  const [values, setValues] = useState(initialValuesState);
-  const [errorMessages, setErrorMessages] = useState(initialErrorState);
-  const navigate = useNavigate();
+const EditProfile = () => {
   const { user, isLoading, errorMessage } = useSelector(
     (store: any) => store.user
   );
+  console.log(user.payload);
+  const initialValuesState = {
+    username: user.payload.username || null,
+    email: user.payload.email || null,
+    password: "",
+    confirm_password: "",
+  };
+  const [values, setValues] = useState(initialValuesState);
+  const [errorMessages, setErrorMessages] = useState(initialErrorState);
+  const navigate = useNavigate();
+
   const dispatch = useDispatch();
 
   const handleChange = (e: React.FormEvent) => {
@@ -32,11 +37,18 @@ const Login = () => {
   };
 
   const checkValues = () => {
-    const { email, password } = values;
+    const { username, email, password, confirm_password } = values;
 
     let verifiedData = true;
-    let emailM = "",
-      passwordM = "";
+    let usernameM = "",
+      emailM = "",
+      passwordM = "",
+      confirm_passwordM = "";
+
+    if (username.length < 8) {
+      verifiedData = false;
+      usernameM = "Username has to be bigger than 8 characters!";
+    }
 
     if (!validator.isEmail(email)) {
       verifiedData = false;
@@ -44,13 +56,19 @@ const Login = () => {
     }
     if (password.length < 8) {
       verifiedData = false;
-      passwordM = "Password is too short!";
+      passwordM = "Password has to be bigger than 8 characters!";
+    }
+    if (confirm_password !== password) {
+      verifiedData = false;
+      confirm_passwordM = "Passwords do not match!";
     }
 
     setErrorMessages({
       ...errorMessages,
+      usernameM,
       emailM,
       passwordM,
+      confirm_passwordM,
     });
 
     return verifiedData;
@@ -60,10 +78,12 @@ const Login = () => {
     e.preventDefault();
     if (checkValues()) {
       const req_values = {
+        username: values.username.trim(),
         email: values.email.trim(),
         password: values.password.trim(),
       };
-      dispatch(loginUser(req_values));
+
+      //  dispatch(editUser(req_values));
       return;
     }
   };
@@ -71,7 +91,16 @@ const Login = () => {
   return (
     <Wrapper>
       <form onSubmit={handleSubmit} className="form">
-        <h5 className="form-title">Login</h5>
+        <h5 className="form-title">Update Account</h5>
+        <FormInput
+          name="username"
+          type="text"
+          label="Username"
+          required={true}
+          errorMessage={errorMessages.usernameM}
+          value={values.username}
+          handleChange={handleChange}
+        />
         <FormInput
           name="email"
           type="email"
@@ -90,12 +119,20 @@ const Login = () => {
           value={values.password}
           handleChange={handleChange}
         />
+        <FormInput
+          name="confirm_password"
+          type="password"
+          label="Confirm Password"
+          required={true}
+          errorMessage={errorMessages.confirm_passwordM}
+          value={values.confirm_password}
+          handleChange={handleChange}
+        />
 
         <div className="btn-group">
           <button type="submit" className="btn">
-            <h5>Login</h5>
+            <h5>Update</h5>
           </button>
-
           <button type="button" className="btn" onClick={() => navigate(-1)}>
             <h5>Cancel</h5>
           </button>
@@ -106,4 +143,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default EditProfile;

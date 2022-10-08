@@ -1,25 +1,25 @@
 import React, { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
-import { Wrapper } from "./ProposalsLayout.style";
+import { Wrapper } from "./HomeLayout.style";
 
-const Proposals = () => {
+const HomeLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { pathname } = location;
 
   useEffect(() => {
-    if (pathname === "/workshop") {
-      navigate("private");
+    if (pathname === "/home") {
+      navigate("active");
     }
   }, [pathname, navigate]);
   return (
     <Wrapper>
       <NavigationBar
         destinationList={[
-          { href: "private", title: "Private" },
-          { href: "shared", title: "Shared" },
-          { href: "create", title: "Create" },
+          { href: "active", title: "Active" },
+          { href: "expired", title: "Expired" },
+          { href: "search", title: "Search" },
         ]}
       />
       <main className="main-container">
@@ -29,4 +29,4 @@ const Proposals = () => {
   );
 };
 
-export default Proposals;
+export default HomeLayout;

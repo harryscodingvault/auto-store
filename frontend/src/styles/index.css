@@ -183,7 +183,8 @@ ul {
   height: 2rem;
   position: relative;
   transform: translateX(-25px);
-  margin: 0 auto;
+  margin: auto;
+  margin-top: 2rem;
 }
 
 .spinner::before,
