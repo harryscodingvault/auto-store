@@ -4,6 +4,7 @@ import User from "../models/UserModel";
 import { StatusCodes } from "http-status-codes";
 import Proposal from "../models/ProposalModel";
 import { createNewPassword } from "../utils/passwordHandler";
+import { createJWT } from "../utils/jwtHandler";
 
 export const getUser = async (
   req: Request,
@@ -36,9 +37,17 @@ export const updateUser = async (
     updates.forEach((update) => (user[update] = req.body[update]));
     const hashedPassword = await createNewPassword(req.body.password);
     user.password = hashedPassword;
-    await user?.save();
+    const token = await createJWT(user._id);
+    user.tokens = [{ token }];
+    console.log(user);
+    await user.save();
 
-    res.status(StatusCodes.OK).json(user);
+    res.status(StatusCodes.OK).json({
+      username: user.username,
+      email: user.email,
+      _id: user._id,
+      token,
+    });
   } catch (error) {
     res.status(StatusCodes.BAD_REQUEST).send(error);
   }
