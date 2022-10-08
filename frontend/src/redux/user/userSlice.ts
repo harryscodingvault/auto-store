@@ -25,7 +25,7 @@ export const loginUser: any = createAsyncThunk(
 );
 
 export const registerUser: any = createAsyncThunk(
-  "auth/loginUser",
+  "user/loginUser",
   async (user, thunkAPI) => {
     try {
       const resp = await originAPI.post("auth/signup", user);
@@ -37,10 +37,22 @@ export const registerUser: any = createAsyncThunk(
 );
 
 export const logoutUser: any = createAsyncThunk(
-  "auth/logoutUser",
+  "user/logoutUser",
   async (_, thunkAPI) => {
     try {
       const resp = await originAPI.post("auth/signup");
+      return resp.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response.data.error);
+    }
+  }
+);
+
+export const editUser: any = createAsyncThunk(
+  "user/editUser",
+  async (user, thunkAPI) => {
+    try {
+      const resp = await originAPI.patch("user/me", user);
       return resp.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response.data.error);
@@ -78,6 +90,20 @@ const userSlice = createSlice({
       addUserToLocalStorage(user);
     },
     [loginUser.rejected]: (state, payload) => {
+      state.isLoading = false;
+      state.errorMessage = payload;
+    },
+    //EDIT USER
+    [editUser.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [editUser.fulfilled]: (state, payload) => {
+      state.isLoading = false;
+      const user = payload;
+      state.user = null;
+      addUserToLocalStorage(user);
+    },
+    [editUser.rejected]: (state, payload) => {
       state.isLoading = false;
       state.errorMessage = payload;
     },
