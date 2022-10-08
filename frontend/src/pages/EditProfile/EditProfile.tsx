@@ -19,8 +19,8 @@ const EditProfile = () => {
   );
 
   const initialValuesState = {
-    username: user.payload.username || null,
-    email: user.payload.email || null,
+    username: user.username || "",
+    email: user.email || "",
     password: "",
     confirm_password: "",
   };

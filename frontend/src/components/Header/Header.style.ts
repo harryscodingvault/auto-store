@@ -13,6 +13,7 @@ export const Wrapper = styled.div`
   -moz-user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
+
   .nav {
     border-top: 1px solid var(--secondary-900);
     border-bottom: 1px solid var(--secondary-500);

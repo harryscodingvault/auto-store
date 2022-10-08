@@ -50,9 +50,13 @@ export const logoutUser: any = createAsyncThunk(
 
 export const editUser: any = createAsyncThunk(
   "user/editUser",
-  async (user, thunkAPI) => {
+  async (user, thunkAPI: any) => {
     try {
-      const resp = await originAPI.patch("user/me", user);
+      const resp = await originAPI.patch("user/me", user, {
+        headers: {
+          authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
+        },
+      });
       return resp.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response.data.error);
@@ -62,9 +66,13 @@ export const editUser: any = createAsyncThunk(
 
 export const deleteUser: any = createAsyncThunk(
   "user/deleteUser",
-  async (_, thunkAPI) => {
+  async (_, thunkAPI: any) => {
     try {
-      const resp = await originAPI.delete("user/me");
+      const resp = await originAPI.delete("user/me", {
+        headers: {
+          authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
+        },
+      });
       return resp.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response.data.error);
@@ -81,13 +89,12 @@ const userSlice = createSlice({
     [registerUser.pending]: (state) => {
       state.isLoading = true;
     },
-    [registerUser.fulfilled]: (state, payload) => {
-      const user = payload;
+    [registerUser.fulfilled]: (state, { payload }) => {
       state.isLoading = false;
-      state.user = user;
-      addUserToLocalStorage(user);
+      state.user = payload;
+      addUserToLocalStorage(payload);
     },
-    [registerUser.rejected]: (state, payload) => {
+    [registerUser.rejected]: (state, { payload }) => {
       state.isLoading = false;
       state.errorMessage = payload;
     },
@@ -95,28 +102,28 @@ const userSlice = createSlice({
     [loginUser.pending]: (state) => {
       state.isLoading = true;
     },
-    [loginUser.fulfilled]: (state, payload) => {
+    [loginUser.fulfilled]: (state, { payload }) => {
       state.isLoading = false;
-      const user = payload;
-      state.user = user;
-      addUserToLocalStorage(user);
+      state.user = payload;
+      addUserToLocalStorage(payload);
     },
-    [loginUser.rejected]: (state, payload) => {
+    [loginUser.rejected]: (state, { payload }) => {
       state.isLoading = false;
+
       state.errorMessage = payload;
     },
     //EDIT USER
     [editUser.pending]: (state) => {
       state.isLoading = true;
     },
-    [editUser.fulfilled]: (state, payload) => {
+    [editUser.fulfilled]: (state, { payload }) => {
       state.isLoading = false;
-      const user = payload;
-      state.user = user;
-      addUserToLocalStorage(user);
+      state.user = payload;
+      addUserToLocalStorage(payload);
     },
-    [editUser.rejected]: (state, payload) => {
+    [editUser.rejected]: (state, { payload }) => {
       state.isLoading = false;
+
       state.errorMessage = payload;
     },
     //LOGOUT USER
@@ -128,7 +135,7 @@ const userSlice = createSlice({
       state.user = null;
       removeUserFromLocalStorage();
     },
-    [deleteUser.rejected]: (state, payload) => {
+    [deleteUser.rejected]: (state, { payload }) => {
       state.isLoading = false;
       state.errorMessage = payload;
     },
@@ -136,12 +143,12 @@ const userSlice = createSlice({
     [logoutUser.pending]: (state) => {
       state.isLoading = true;
     },
-    [logoutUser.fulfilled]: (state, payload) => {
+    [logoutUser.fulfilled]: (state) => {
       state.isLoading = false;
       state.user = null;
       removeUserFromLocalStorage();
     },
-    [logoutUser.rejected]: (state, payload) => {
+    [logoutUser.rejected]: (state, { payload }) => {
       state.isLoading = false;
       state.errorMessage = payload;
     },
