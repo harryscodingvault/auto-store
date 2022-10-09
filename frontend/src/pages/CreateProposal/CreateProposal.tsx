@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import FormInput from "../../components/FormComponents/FormInput/FormInput";
 import { getCurrentDay, getDatePlus30 } from "../../utils/datetime _management";
 import { isAfter, isBefore } from "date-fns";
+import { useDispatch } from "react-redux";
+import { createProposal } from "../../redux/proposal/proposalSlice";
 
 const getDay = getDatePlus30();
 
@@ -12,10 +14,10 @@ const initialValuesState = {
   title: "",
   time_req: getDay.currTime,
   date_req: getDay.currDay,
-  capacity: 10,
+  capacity: 3,
 };
 
-const initialValuesOptions = ["yes", "no"];
+const initialValuesOptions = [{ name: "yes" }, { name: "no" }];
 
 const initialErrorState = {
   titleM: "",
@@ -30,6 +32,7 @@ const CreateProposal = () => {
   const [options, setOptions] = useState(initialValuesOptions);
   const [errorMessages, setErrorMessages] = useState(initialErrorState);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e: React.FormEvent) => {
     const name = (e.target as HTMLInputElement).name;
@@ -39,7 +42,7 @@ const CreateProposal = () => {
   const arrayChangeHandler = (e: React.FormEvent, index: number) => {
     const value = (e.target as HTMLInputElement).value;
     const list = [...options];
-    list[index] = value;
+    list[index] = { name: value };
     setOptions([...list]);
   };
 
@@ -72,7 +75,7 @@ const CreateProposal = () => {
       capacityM = "2=<capacity<=100";
     }
     options.map((item, index) => {
-      if (options[index].trim() === "") {
+      if (options[index].name.trim() === "") {
         verifiedData = false;
         optionsM[index] = "Empty value";
       } else {
@@ -95,14 +98,15 @@ const CreateProposal = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (checkValues()) {
-      console.log("register", {
+      const reqData = {
         title: values.title,
         deadline: new Date(
           `${values.date_req} ${values.time_req}`
         ).toISOString(),
         capacity: values.capacity,
         options: options,
-      });
+      };
+      dispatch(createProposal(reqData));
     }
   };
 
@@ -156,7 +160,7 @@ const CreateProposal = () => {
                 label={`Option ${index + 1}`}
                 required={true}
                 errorMessage={errorMessages.optionsM[index]}
-                value={options[index]}
+                value={options[index].name}
                 handleChange={(e) => arrayChangeHandler(e, index)}
               />
               {options.length > 2 && (
@@ -176,7 +180,7 @@ const CreateProposal = () => {
           <button
             type="button"
             className="btn"
-            onClick={() => setOptions([...options, ""])}
+            onClick={() => setOptions([...options, { name: "" }])}
           >
             <h5>New Option</h5>
           </button>

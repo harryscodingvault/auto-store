@@ -13,6 +13,9 @@ export const Wrapper = styled.div`
       align-items: flex-start;
       color: var(--secondary-500);
     }
+    .info {
+      text-transform: none;
+    }
   }
   .btn-group {
     display: flex;
