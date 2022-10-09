@@ -151,6 +151,8 @@ const userSlice = createSlice({
     //LOGOUT USER
     [logoutUser.pending]: (state) => {
       state.isLoading = true;
+      state.user = null;
+      removeUserFromLocalStorage();
     },
     [logoutUser.fulfilled]: (state) => {
       state.isLoading = false;

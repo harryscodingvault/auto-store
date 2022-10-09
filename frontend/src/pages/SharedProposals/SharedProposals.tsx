@@ -3,7 +3,7 @@ import ListCards from "../../components/ListCards/ListCards";
 
 import { cards } from "../../cardList";
 
-const OldProposals = () => {
+const SharedProposals = () => {
   const filteredCards = cards.filter((item) => item.active === false);
 
   return (
@@ -13,4 +13,4 @@ const OldProposals = () => {
   );
 };
 
-export default OldProposals;
+export default SharedProposals;

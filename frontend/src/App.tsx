@@ -7,8 +7,8 @@ import Home from "./pages/Home/Home";
 import Layout from "./pages/Layout/Layout";
 import Error from "./pages/Error/Error";
 import ProposalsLayout from "./pages/ProposalsLayout/ProposalsLayout";
-import CurrentProposals from "./pages/CurrentProposals/CurrentProposals";
-import OldProposals from "./pages/OldProposals/OldProposals";
+import PrivateProposals from "./pages/PrivateProposals/PrivateProposals";
+import SharedProposals from "./pages/SharedProposals/SharedProposals";
 import CreateProposal from "./pages/CreateProposal/CreateProposal";
 import Profile from "./pages/Profile/Profile";
 import Registration from "./pages/Registration/Registration";
@@ -34,8 +34,8 @@ function App() {
               <Route path="search" element={<SearchProposals />} />
             </Route>
             <Route path="workshop" element={<ProposalsLayout />}>
-              <Route path="private" element={<CurrentProposals />} />
-              <Route path="shared" element={<OldProposals />} />
+              <Route path="private" element={<PrivateProposals />} />
+              <Route path="shared" element={<SharedProposals />} />
               <Route path="create" element={<CreateProposal />} />
             </Route>
 

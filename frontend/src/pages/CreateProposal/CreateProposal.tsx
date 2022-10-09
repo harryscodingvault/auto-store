@@ -107,6 +107,8 @@ const CreateProposal = () => {
         options: options,
       };
       dispatch(createProposal(reqData));
+      setValues(initialValuesState);
+      navigate("/workshop/private");
     }
   };
 
@@ -125,7 +127,7 @@ const CreateProposal = () => {
         <FormInput
           name="time_req"
           type="time"
-          label="Time"
+          label="Deadline Time"
           required={true}
           errorMessage={errorMessages.time_reqM}
           value={values.time_req}
@@ -134,7 +136,7 @@ const CreateProposal = () => {
         <FormInput
           name="date_req"
           type="date"
-          label="Date"
+          label="Deadline Date"
           required={true}
           errorMessage={errorMessages.date_reqM}
           value={values.date_req}
