@@ -104,6 +104,7 @@ export const getAllProposals = async (
   res: Response,
   next: NextFunction
 ) => {
+  const userId = res.locals.user._id;
   // SORTING PAGINATION
   const page = parseInt(req.params.page) || 0;
   const limit = parseInt(req.params.limit) || 10;
@@ -114,7 +115,7 @@ export const getAllProposals = async (
 
   if (creator === "me") {
     queryObject.editOn = isPrivate === "true" ? true : false;
-    queryObject.createdBy = res.locals.user._id;
+    queryObject.createdBy = userId;
 
     result = Proposal.find(queryObject)
       .skip(page * limit)
@@ -126,20 +127,32 @@ export const getAllProposals = async (
     if (search) {
       queryObject.title = { $regex: search, $options: "i" };
     }
-    queryObject.active = isActive === "true" ? true : false;
-    queryObject.voterId = res.locals.user._id;
+    queryObject.active = isActive === "true" ? "true" : "false";
+    try {
+      let votedProposals: any = await Voter.aggregate([
+        {
+          $match: { voterId: userId },
+        },
+        { $group: { _id: "$proposalId" } },
+      ]);
+      votedProposals = votedProposals.map((item: any) => item._id);
 
-    result = Voter.find({ voterId: res.locals.user._id }).aggregate([
-      { $lookup: {} },
-    ]);
+      result = Proposal.find({
+        _id: { $in: votedProposals },
+        active: queryObject.active,
+        title: queryObject.title,
+      });
+    } catch (err) {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(err);
+    }
   }
 
   try {
-    const proposals = await result;
+    const proposals: any = await result;
 
     res.status(StatusCodes.OK).json(proposals);
   } catch (err) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(err);
   }
 };
 
