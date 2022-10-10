@@ -20,7 +20,7 @@ export const createProposal = async (
       title,
       deadline,
       capacity,
-      creator: userId,
+      createdBy: userId,
     }).save();
 
     const addedOptions = await Option.insertMany(
@@ -77,6 +77,10 @@ export const getProposal = async (
     if (!proposal) {
       return res.status(StatusCodes.NOT_FOUND).send();
     }
+
+    proposal.editOn = false;
+    await proposal.save();
+
     const issuedVote = await Voter.findOne({
       voterId: userId,
       proposalId: _id,
@@ -95,7 +99,7 @@ export const getProposal = async (
   }
 };
 
-export const getVotedProposals = async (
+export const getAllProposals = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -103,55 +107,35 @@ export const getVotedProposals = async (
   // SORTING PAGINATION
   const page = parseInt(req.params.page) || 0;
   const limit = parseInt(req.params.limit) || 10;
-  const active = req.query.active || true;
-  const sortRequirement: any = {};
-  const sortQ: any = req.query.sortBy;
+  const { isActive, creator, isPrivate, sort, search } = req.query;
 
-  if (sortQ) {
-    const parts: any = sortQ.split(":");
-    sortRequirement[parts[0]] = parts[1] === "desc" ? -1 : 1;
+  const queryObject: any = {};
+  let result;
+
+  if (creator === "me") {
+    queryObject.editOn = isPrivate === "true" ? true : false;
+    queryObject.createdBy = res.locals.user._id;
+
+    result = Proposal.find(queryObject)
+      .skip(page * limit)
+      .limit(limit)
+      .populate("options", ["name", "count"])
+      .populate("createdBy", "username");
+  }
+  if (creator === "any") {
+    if (search) {
+      queryObject.title = { $regex: search, $options: "i" };
+    }
+    queryObject.active = isActive === "true" ? true : false;
+    queryObject.voterId = res.locals.user._id;
+
+    result = Voter.find({ voterId: res.locals.user._id }).aggregate([
+      { $lookup: {} },
+    ]);
   }
 
   try {
-    const proposals = await Proposal.find({
-      owner: res.locals.user._id,
-      active,
-    })
-      .skip(page * limit)
-      .limit(limit)
-      .sort(sortRequirement);
-
-    res.status(StatusCodes.OK).json(proposals);
-  } catch (err) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
-  }
-};
-
-export const getCreatedProposals = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  // SORTING PAGINATION
-  const page = parseInt(req.params.page) || 0;
-  const limit = parseInt(req.params.limit) || 10;
-  const active = req.query.active || true;
-  const sortRequirement: any = {};
-  const sortQ: any = req.query.sortBy;
-
-  if (sortQ) {
-    const parts: any = sortQ.split(":");
-    sortRequirement[parts[0]] = parts[1] === "desc" ? -1 : 1;
-  }
-
-  try {
-    const proposals = await Proposal.find({
-      owner: res.locals.user._id,
-      active,
-    })
-      .skip(page * limit)
-      .limit(limit)
-      .sort(sortRequirement);
+    const proposals = await result;
 
     res.status(StatusCodes.OK).json(proposals);
   } catch (err) {
@@ -178,7 +162,7 @@ export const updateProposal = async (
   try {
     const proposal: any = await Proposal.findOne({
       _id,
-      creator: res.locals.user._id,
+      createdBy: res.locals.user._id,
     });
     if (!proposal) {
       return res.status(StatusCodes.NOT_FOUND).send({ error: "Not Found" });
@@ -213,7 +197,7 @@ export const deleteProposal = async (
 
     const proposal = await Proposal.findOneAndDelete({
       _id,
-      creator: res.locals.user._id,
+      createdBy: res.locals.user._id,
     });
 
     if (!proposal) {

@@ -4,7 +4,7 @@ import Option from "./OptionModel";
 
 const proposalSchema = new mongoose.Schema(
   {
-    creator: {
+    createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: User,

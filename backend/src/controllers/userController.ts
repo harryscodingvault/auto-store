@@ -60,7 +60,7 @@ export const deleteUser = async (
 ) => {
   try {
     const user = await res.locals.user.remove();
-    await Proposal.deleteMany({ creator: user._id });
+    await Proposal.deleteMany({ createdBy: user._id });
     res.status(StatusCodes.OK).json(user);
   } catch (error) {
     res.status(StatusCodes.BAD_REQUEST).send(error);

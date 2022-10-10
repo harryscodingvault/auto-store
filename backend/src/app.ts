@@ -1,8 +1,7 @@
 import express from "express";
 import http from "http";
 import cors from "cors";
-import socketioApp from "./socketio/socketio";
-
+import morgan from "morgan";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -14,9 +13,11 @@ app.use(
     credentials: true,
   })
 );
+if (process.env.NODE_ENV !== "production") {
+  app.use(morgan("dev"));
+}
 app.use(express.json());
 const server = http.createServer(app);
-socketioApp(server);
 
 // ROUTES
 import AuthRouter from "./routes/authRoutes";
