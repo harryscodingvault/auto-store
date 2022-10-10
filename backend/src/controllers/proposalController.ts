@@ -111,7 +111,7 @@ export const getAllProposals = async (
   const { isActive, creator, isPrivate, sort, search } = req.query;
 
   const queryObject: any = {};
-  let result;
+  let result: any;
 
   if (creator === "me") {
     queryObject.editOn = isPrivate === "true" ? true : false;
@@ -127,7 +127,7 @@ export const getAllProposals = async (
     if (search) {
       queryObject.title = { $regex: search, $options: "i" };
     }
-    queryObject.active = isActive === "true" ? "true" : "false";
+    queryObject.active = isActive === "true" ? true : false;
     try {
       let votedProposals: any = await Voter.aggregate([
         {
@@ -136,15 +136,25 @@ export const getAllProposals = async (
         { $group: { _id: "$proposalId" } },
       ]);
       votedProposals = votedProposals.map((item: any) => item._id);
+      queryObject._id = { $in: votedProposals };
 
-      result = Proposal.find({
-        _id: { $in: votedProposals },
-        active: queryObject.active,
-        title: queryObject.title,
-      });
+      result = Proposal.find(queryObject);
     } catch (err) {
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(err);
     }
+  }
+
+  if (sort === "latest") {
+    result = result.sort("-deadline");
+  }
+  if (sort === "oldest") {
+    result = result.sort("deadline");
+  }
+  if (sort === "a-z") {
+    result = result.sort("title");
+  }
+  if (sort === "z-a") {
+    result = result.sort("-title");
   }
 
   try {
