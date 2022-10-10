@@ -4,6 +4,8 @@ import { proposalInterface } from "../../types/proposalType";
 import { format } from "date-fns";
 
 import { Wrapper } from "./SingleCard.style";
+import { deleteProposal } from "../../redux/allProposals/allProposalsSlice";
+import { useDispatch } from "react-redux";
 
 const SingleCard = ({ item }: { item: any }) => {
   console.log(item);
@@ -20,6 +22,8 @@ const SingleCard = ({ item }: { item: any }) => {
     totalVotes,
     createdBy,
   } = item;
+
+  const dispatch = useDispatch();
 
   return (
     <Wrapper>
@@ -70,7 +74,7 @@ const SingleCard = ({ item }: { item: any }) => {
         <div className="btn">
           <h5>Edit</h5>
         </div>
-        <div className="btn">
+        <div className="btn" onClick={() => dispatch(deleteProposal(_id))}>
           <h5>Delete</h5>
         </div>
       </div>

@@ -29,7 +29,7 @@ const PrivateProposals = () => {
       <SortingBar />
 
       <div className="list">
-        {proposals.map((item: any) => (
+        {proposals?.map((item: any) => (
           <SingleCard item={item} key={item._id} />
         ))}
       </div>
