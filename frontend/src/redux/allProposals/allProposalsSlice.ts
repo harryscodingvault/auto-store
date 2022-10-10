@@ -44,27 +44,6 @@ export const getAllProposals: any = createAsyncThunk(
   }
 );
 
-export const deleteProposal: any = createAsyncThunk(
-  "allProposals/deleteProposals",
-  async (proposalId, thunkAPI: any) => {
-    try {
-      const resp = await originAPI.delete(`proposal/${proposalId}`, {
-        headers: {
-          authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
-        },
-      });
-      thunkAPI.dispatch(getAllProposals());
-      return resp.data;
-    } catch (error: any) {
-      if (error.response.status === 401) {
-        thunkAPI.dispatch(logoutUser());
-        return thunkAPI.rejectWithValue("Unauthorized! Logging out...");
-      }
-      return thunkAPI.rejectWithValue(error.response.data.error);
-    }
-  }
-);
-
 const allProposalSlice = createSlice({
   name: "allProposals",
   initialState,
@@ -80,20 +59,6 @@ const allProposalSlice = createSlice({
       state.proposals = proposals;
     },
     [getAllProposals.rejected]: (state, { payload }) => {
-      state.isLoading = false;
-      state.errorMessage = payload;
-    },
-    //DELETE PROPOSAL
-    [deleteProposal.pending]: (state) => {
-      state.isLoading = true;
-    },
-    [deleteProposal.fulfilled]: (state, { payload }) => {
-      const { proposals } = payload;
-      console.log(payload);
-      state.isLoading = false;
-      state.proposals = proposals;
-    },
-    [deleteProposal.rejected]: (state, { payload }) => {
       state.isLoading = false;
       state.errorMessage = payload;
     },

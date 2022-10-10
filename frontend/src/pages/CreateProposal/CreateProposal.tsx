@@ -3,36 +3,52 @@ import { Wrapper } from "./CreateProposal.style";
 import { useNavigate } from "react-router-dom";
 
 import FormInput from "../../components/FormComponents/FormInput/FormInput";
-import { getCurrentDay, getDatePlus30 } from "../../utils/datetime _management";
+import {
+  formatDate,
+  getCurrentDay,
+  getDatePlus30,
+} from "../../utils/datetime _management";
 import { isAfter, isBefore } from "date-fns";
-import { useDispatch } from "react-redux";
-import { createProposal } from "../../redux/proposal/proposalSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  createProposal,
+  editProposal,
+  setEditProposalFalse,
+} from "../../redux/proposal/proposalSlice";
 
 const getDay = getDatePlus30();
 
-const initialValuesState = {
-  title: "",
-  time_req: getDay.currTime,
-  date_req: getDay.currDay,
-  capacity: 3,
-};
-
-const initialValuesOptions = [{ name: "yes" }, { name: "no" }];
-
-const initialErrorState = {
-  titleM: "",
-  optionsM: [""],
-  time_reqM: "",
-  date_reqM: "",
-  capacityM: "",
-};
-
 const CreateProposal = () => {
+  const { proposal, isEditing } = useSelector((store: any) => store.proposal);
+
+  const initialValuesState = {
+    title: proposal.title || "",
+    time_req: formatDate(proposal.deadline)?.formatTime || getDay.currTime,
+    date_req: formatDate(proposal.deadline)?.formatDay || getDay.currDay,
+    capacity: proposal.capacity || 3,
+  };
+
+  const initialValuesOptions = proposal?.options?.map((item: any) => {
+    return {
+      name: item.name,
+    };
+  }) || [{ name: "yes" }, { name: "no" }];
+
+  const initialErrorState = {
+    titleM: "",
+    optionsM: [""],
+    time_reqM: "",
+    date_reqM: "",
+    capacityM: "",
+  };
+
   const [values, setValues] = useState(initialValuesState);
   const [options, setOptions] = useState(initialValuesOptions);
   const [errorMessages, setErrorMessages] = useState(initialErrorState);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  console.log(proposal);
 
   const handleChange = (e: React.FormEvent) => {
     const name = (e.target as HTMLInputElement).name;
@@ -74,7 +90,7 @@ const CreateProposal = () => {
       verifiedData = false;
       capacityM = "2=<capacity<=100";
     }
-    options.map((item, index) => {
+    options.map((item: any, index: any) => {
       if (options[index].name.trim() === "") {
         verifiedData = false;
         optionsM[index] = "Empty value";
@@ -106,7 +122,14 @@ const CreateProposal = () => {
         capacity: values.capacity,
         options: options,
       };
-      dispatch(createProposal(reqData));
+      if (isEditing) {
+        dispatch(
+          editProposal({ proposalId: proposal._id, proposalData: reqData })
+        );
+      } else {
+        dispatch(createProposal(reqData));
+      }
+
       setValues(initialValuesState);
       navigate("/workshop/private");
     }
@@ -154,7 +177,7 @@ const CreateProposal = () => {
         />
         <div className="option-list">
           <h5>Options</h5>
-          {options.map((item, index) => (
+          {options.map((item: any, index: any) => (
             <div className="option-input" key={index}>
               <FormInput
                 name={`option-${index}`}
@@ -169,7 +192,9 @@ const CreateProposal = () => {
                 <div
                   className="btn"
                   onClick={() =>
-                    setOptions(options.filter((item, i) => i !== index))
+                    setOptions(
+                      options.filter((item: any, i: any) => i !== index)
+                    )
                   }
                 >
                   X
@@ -189,9 +214,16 @@ const CreateProposal = () => {
         )}
         <div className="btn-group">
           <button type="submit" className="btn">
-            <h5>Create</h5>
+            <h5>{isEditing ? "Update" : "Create"}</h5>
           </button>
-          <button type="button" className="btn" onClick={() => navigate(-1)}>
+          <button
+            type="button"
+            className="btn"
+            onClick={() => {
+              dispatch(setEditProposalFalse());
+              navigate(-1);
+            }}
+          >
             <h5>Cancel</h5>
           </button>
         </div>

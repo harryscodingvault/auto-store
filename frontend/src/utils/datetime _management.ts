@@ -15,3 +15,10 @@ export const getDatePlus30 = () => {
 
   return { currTime, currDay, currDate };
 };
+
+export const formatDate = (newDate: any = null) => {
+  const formatTime = format(new Date(newDate), "HH:mm");
+  const formatDay = format(new Date(newDate), "yyyy-MM-dd");
+
+  return { formatTime, formatDay };
+};

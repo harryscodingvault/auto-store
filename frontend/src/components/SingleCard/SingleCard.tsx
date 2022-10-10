@@ -4,11 +4,14 @@ import { proposalInterface } from "../../types/proposalType";
 import { format } from "date-fns";
 
 import { Wrapper } from "./SingleCard.style";
-import { deleteProposal } from "../../redux/allProposals/allProposalsSlice";
+import {
+  deleteProposal,
+  editProposal,
+  setEditProposal,
+} from "../../redux/proposal/proposalSlice";
 import { useDispatch } from "react-redux";
 
 const SingleCard = ({ item }: { item: any }) => {
-  console.log(item);
   const navigate = useNavigate();
   const {
     _id,
@@ -71,10 +74,21 @@ const SingleCard = ({ item }: { item: any }) => {
         </div>
       )}
       <div className="edit-group">
-        <div className="btn">
+        <div
+          className="btn"
+          onClick={() => {
+            dispatch(setEditProposal(item));
+            navigate("/workshop/create");
+          }}
+        >
           <h5>Edit</h5>
         </div>
-        <div className="btn" onClick={() => dispatch(deleteProposal(_id))}>
+        <div
+          className="btn"
+          onClick={() => {
+            dispatch(deleteProposal(_id));
+          }}
+        >
           <h5>Delete</h5>
         </div>
       </div>
