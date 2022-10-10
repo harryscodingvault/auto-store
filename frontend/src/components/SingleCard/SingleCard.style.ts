@@ -13,20 +13,32 @@ export const Wrapper = styled.div`
     padding: 0.1rem 0;
     border-bottom: 5px solid var(--secondary-500);
     color: var(--secondary-500);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    .cap-stats {
+      display: flex;
+      flex-direction: row;
+    }
   }
   .stats {
     margin-top: 1rem;
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    justify-content: center;
+
     gap: 1rem;
+    padding: 0 1rem;
     .stat-group {
       display: flex;
-      flex-direction: row
-      flex: 1;
+      flex-direction: row;
+      width: 100%;
+
       span {
         color: var(--secondary-500);
+        margin-right: 0.1rem;
       }
     }
   }

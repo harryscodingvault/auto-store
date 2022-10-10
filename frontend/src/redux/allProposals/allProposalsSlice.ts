@@ -5,6 +5,7 @@ import authHeader from "../../utils/authHeader";
 import { logoutUser } from "../user/userSlice";
 
 const initialFilterState = {
+  search: "",
   isActive: true,
   isPrivate: true,
   createdByUser: true,
@@ -15,9 +16,11 @@ const initialFilterState = {
 const initialState = {
   isLoading: false,
   proposals: [],
-  totalProposals: 10,
+  proposalLimit: 10,
   numOfPages: 1,
   page: 1,
+  totalProposals: 0,
+
   stats: {},
   errorMessage: "",
   ...initialFilterState,
@@ -51,9 +54,12 @@ const allProposalSlice = createSlice({
       state.isLoading = true;
     },
     [getAllProposals.fulfilled]: (state, { payload }) => {
-      const { proposals } = payload;
+      const { proposals, totalProposals, page } = payload;
       state.isLoading = false;
       state.proposals = proposals;
+      state.numOfPages = Math.floor(totalProposals / state.proposalLimit) + 1;
+      state.page = page;
+      state.totalProposals = totalProposals;
     },
     [getAllProposals.rejected]: (state, { payload }) => {
       state.isLoading = false;

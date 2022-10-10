@@ -1,9 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "../../redux/user/userSlice";
 import { Wrapper } from "./Landing.style";
 
 const Landing = () => {
   const navigate = useNavigate();
+  const { isLoading, user } = useSelector((store: any) => store.user);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (user) {
+      navigate("home");
+    }
+  });
 
   return (
     <Wrapper>
@@ -28,6 +38,24 @@ const Landing = () => {
         >
           <h5>Google SignIn</h5>
         </div>
+
+        {isLoading ? (
+          <div className="spinner"></div>
+        ) : (
+          <div
+            className="btn"
+            onClick={() =>
+              dispatch(
+                loginUser({
+                  email: "testuser@testazvoter.com",
+                  password: "testpasswordtestazvoter",
+                })
+              )
+            }
+          >
+            <h5>Test App/Demo</h5>
+          </div>
+        )}
       </div>
     </Wrapper>
   );

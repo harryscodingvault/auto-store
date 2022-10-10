@@ -6,12 +6,20 @@ import Modal from "../../components/Modal/Modal";
 import SortingBar from "../../components/SortingBar/SortingBar";
 import { getAllProposals } from "../../redux/allProposals/allProposalsSlice";
 import { Wrapper } from "./PrivateProposals.style";
+import PageRequestBar from "../../components/PageRequestBar/PageRequestBar";
 
 const PrivateProposals = () => {
-  const { isLoading, proposals, errorMessage } = useSelector(
-    (store: any) => store.allProposals
-  );
+  const {
+    isLoading,
+    proposals,
+    errorMessage,
+    numOfPages,
+    page,
+    totalProposals,
+  } = useSelector((store: any) => store.allProposals);
   const dispatch = useDispatch();
+
+  console.log(page);
 
   useEffect(() => {
     dispatch(getAllProposals());
@@ -33,6 +41,7 @@ const PrivateProposals = () => {
           <SingleCard item={item} key={item._id} />
         ))}
       </div>
+      <PageRequestBar />
     </Wrapper>
   );
 };

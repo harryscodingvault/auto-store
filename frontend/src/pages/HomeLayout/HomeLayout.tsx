@@ -19,7 +19,6 @@ const HomeLayout = () => {
         destinationList={[
           { href: "active", title: "Active" },
           { href: "expired", title: "Expired" },
-          { href: "search", title: "Search" },
         ]}
       />
       <main className="main-container">

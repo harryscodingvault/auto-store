@@ -32,26 +32,19 @@ const SingleCard = ({ item }: { item: any }) => {
     <Wrapper>
       <div className="title">
         <h5>{title}</h5>
+        <div className="cap-stats">
+          <p>{totalVotes}</p> / <p>{capacity}</p>
+        </div>
       </div>
 
       <div className="stats">
         <div className="stat-group">
+          <span>Deadline:</span>
+          <h5>{format(new Date(deadline), "yyyy/MM/dd HH:mm bb") || null}</h5>
+        </div>
+        <div className="stat-group">
           <span>By:</span>
           <p>{createdBy.username}</p>
-        </div>
-        <div className="stat-group">
-          <span>Capacity:</span>
-          <p>{capacity}</p>
-        </div>
-
-        <div className="stat-group">
-          <span>Votes:</span>
-          <p>{totalVotes}</p>
-        </div>
-
-        <div className="stat-group">
-          <span>Deadline:</span>
-          <p>{format(new Date(deadline), "yyyy-MM-dd/HH:mm bbb") || null}</p>
         </div>
       </div>
       <ul className="list-options">

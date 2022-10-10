@@ -135,7 +135,9 @@ export const getAllProposals = async (
       votedProposals = votedProposals.map((item: any) => item._id);
       queryObject._id = { $in: votedProposals };
 
-      result = Proposal.find(queryObject);
+      result = Proposal.find(queryObject)
+        .populate("options", ["name", "count", "url"])
+        .populate("createdBy", ["username"]);
     } catch (err) {
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(err);
     }
@@ -155,11 +157,12 @@ export const getAllProposals = async (
   }
 
   //PAGINATION
-  const page = parseInt(req.params.page) || 0;
+  const page = parseInt(req.params.page) || 1;
   const limit = parseInt(req.params.limit) || 10;
+  const skip = (page - 1) * limit;
 
   try {
-    result = result.skip(page * limit).limit(limit);
+    result = result.skip(skip).limit(limit);
     const proposals: any = await result;
 
     res

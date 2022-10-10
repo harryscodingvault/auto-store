@@ -23,8 +23,8 @@ const CreateProposal = () => {
 
   const initialValuesState = {
     title: proposal.title || "",
-    time_req: formatDate(proposal.deadline)?.formatTime || getDay.currTime,
-    date_req: formatDate(proposal.deadline)?.formatDay || getDay.currDay,
+    time_req: getDay.currTime,
+    date_req: getDay.currDay,
     capacity: proposal.capacity || 3,
   };
 
