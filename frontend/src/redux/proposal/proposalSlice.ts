@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import originAPI from "../../utils/api";
+import authHeader from "../../utils/authHeader";
 import {
   addUserToLocalStorage,
   getUserFromLocalStorage,
@@ -19,11 +20,11 @@ export const createProposal: any = createAsyncThunk(
   "proposal/createProposal",
   async (proposal, thunkAPI: any) => {
     try {
-      const resp = await originAPI.post("proposal", proposal, {
-        headers: {
-          authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
-        },
-      });
+      const resp = await originAPI.post(
+        "proposal",
+        proposal,
+        authHeader(thunkAPI)
+      );
       return resp.data;
     } catch (error: any) {
       if (error.response.status === 401) {
@@ -39,11 +40,10 @@ export const deleteProposal: any = createAsyncThunk(
   "allProposals/deleteProposal",
   async (proposalId, thunkAPI: any) => {
     try {
-      const resp = await originAPI.delete(`proposal/${proposalId}`, {
-        headers: {
-          authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
-        },
-      });
+      const resp = await originAPI.delete(
+        `proposal/${proposalId}`,
+        authHeader(thunkAPI)
+      );
       thunkAPI.dispatch(getAllProposals());
       return resp.data;
     } catch (error: any) {
@@ -63,11 +63,7 @@ export const editProposal: any = createAsyncThunk(
       const resp = await originAPI.patch(
         `proposal/${proposalId}`,
         proposalData,
-        {
-          headers: {
-            authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
-          },
-        }
+        authHeader(thunkAPI)
       );
       thunkAPI.dispatch(getAllProposals());
       return resp.data;

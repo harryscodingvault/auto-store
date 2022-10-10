@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import originAPI from "../../utils/api";
+import authHeader from "../../utils/authHeader";
 import {
   addUserToLocalStorage,
   getUserFromLocalStorage,
@@ -40,7 +41,7 @@ export const logoutUser: any = createAsyncThunk(
   "user/logoutUser",
   async (_, thunkAPI) => {
     try {
-      const resp = await originAPI.post("auth/signup");
+      const resp = await originAPI.post("auth/signup", authHeader(thunkAPI));
       return resp.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response.data.error);
@@ -52,11 +53,7 @@ export const editUser: any = createAsyncThunk(
   "user/editUser",
   async (user, thunkAPI: any) => {
     try {
-      const resp = await originAPI.patch("user/me", user, {
-        headers: {
-          authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
-        },
-      });
+      const resp = await originAPI.patch("user/me", user, authHeader(thunkAPI));
       return resp.data;
     } catch (error: any) {
       if (error.response.status === 401) {
@@ -72,11 +69,7 @@ export const deleteUser: any = createAsyncThunk(
   "user/deleteUser",
   async (_, thunkAPI: any) => {
     try {
-      const resp = await originAPI.delete("user/me", {
-        headers: {
-          authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
-        },
-      });
+      const resp = await originAPI.delete("user/me", authHeader(thunkAPI));
       return resp.data;
     } catch (error: any) {
       if (error.response.status === 401) {

@@ -48,8 +48,6 @@ const CreateProposal = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  console.log(proposal);
-
   const handleChange = (e: React.FormEvent) => {
     const name = (e.target as HTMLInputElement).name;
     const value = (e.target as HTMLInputElement).value;

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import originAPI from "../../utils/api";
+import authHeader from "../../utils/authHeader";
 
 import { logoutUser } from "../user/userSlice";
 
@@ -27,11 +28,7 @@ export const getAllProposals: any = createAsyncThunk(
   async (_, thunkAPI: any) => {
     let url = "proposal?creator=me&isPrivate=true";
     try {
-      const resp = await originAPI.get(url, {
-        headers: {
-          authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
-        },
-      });
+      const resp = await originAPI.get(url, authHeader(thunkAPI));
 
       return resp.data;
     } catch (error: any) {
