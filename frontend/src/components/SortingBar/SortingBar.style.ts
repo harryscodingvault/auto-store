@@ -9,11 +9,12 @@ export const Wrapper = styled.div`
   margin-top: 1rem;
   border: 1px solid var(--secondary-500);
   color: var(--secondary-500);
-  .btn-group {
+  .select-group {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 1rem;
-    .sort-group {
+
+    .sort-req {
       cursor: pointer;
       border-left: 1px solid var(--secondary-500);
       border-right: 1px solid var(--secondary-500);
@@ -32,6 +33,35 @@ export const Wrapper = styled.div`
       }
       h5 {
         text-transform: none;
+      }
+    }
+
+    .select-sorts {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      margin-top: 2rem;
+      background-color: var(--primary-900);
+      border: 1px solid var(--secondary-500);
+
+      cursor: pointer;
+      user-select: none;
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      gap: 0.5rem;
+      .select-btn {
+        padding: 1rem;
+        border-bottom: 1px solid var(--primary-700);
+        border-top: 1px solid var(--primary-700);
+        :hover {
+          border-bottom: 1px solid var(--secondary-500);
+          border-top: 1px solid var(--secondary-500);
+          background-color: var(--primary-700);
+        }
+        :active {
+          background-color: var(--primary-500);
+        }
       }
     }
   }

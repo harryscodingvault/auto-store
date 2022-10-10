@@ -4,9 +4,9 @@ import originAPI from "../../utils/api";
 import { logoutUser } from "../user/userSlice";
 
 const initialFilterState = {
-  active: false,
-  editOn: false,
-  madeByUser: false,
+  isActive: true,
+  isPrivate: true,
+  createdByUser: true,
   sort: "latest",
   sortOptions: ["latest", "oldest", "a-z", "z-a"],
 };

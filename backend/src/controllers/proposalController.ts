@@ -105,9 +105,8 @@ export const getAllProposals = async (
   next: NextFunction
 ) => {
   const userId = res.locals.user._id;
-  // SORTING PAGINATION
-  const page = parseInt(req.params.page) || 0;
-  const limit = parseInt(req.params.limit) || 10;
+
+  //FILTERS
   const { isActive, creator, isPrivate, sort, search } = req.query;
 
   const queryObject: any = {};
@@ -118,8 +117,6 @@ export const getAllProposals = async (
     queryObject.createdBy = userId;
 
     result = Proposal.find(queryObject)
-      .skip(page * limit)
-      .limit(limit)
       .populate("options", ["name", "count"])
       .populate("createdBy", "username");
   }
@@ -143,7 +140,7 @@ export const getAllProposals = async (
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(err);
     }
   }
-
+  //SORTING
   if (sort === "latest") {
     result = result.sort("-deadline");
   }
@@ -157,10 +154,17 @@ export const getAllProposals = async (
     result = result.sort("-title");
   }
 
+  //PAGINATION
+  const page = parseInt(req.params.page) || 0;
+  const limit = parseInt(req.params.limit) || 10;
+
   try {
+    result = result.skip(page * limit).limit(limit);
     const proposals: any = await result;
 
-    res.status(StatusCodes.OK).json(proposals);
+    res
+      .status(StatusCodes.OK)
+      .json({ proposals, totalProposals: proposals?.length, page });
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(err);
   }
