@@ -1,18 +1,19 @@
 export interface optionInterface {
   id: number | string;
-  votes: number;
+  count: number;
   name: string;
   selected: boolean;
 }
 
 export interface proposalInterface {
-  id: number | string;
+  _id: number | string;
   title: string;
   options: optionInterface[];
-  timeLeft: string;
-  creator_id: string;
-  max: number;
+  deadline: string;
+  capacity: number;
   active: boolean;
-  winner: string;
-  voted: boolean;
+  editOn: boolean;
+  chosenProposal: [];
+  totalVotes: number;
+  createdBy: string;
 }

@@ -52,8 +52,8 @@ export const Wrapper = styled.div`
       gap: 0.5rem;
       .select-btn {
         padding: 1rem;
-        border-bottom: 1px solid var(--primary-700);
-        border-top: 1px solid var(--primary-700);
+        border-bottom: 1px solid var(--primary-900);
+        border-top: 1px solid var(--primary-900);
         :hover {
           border-bottom: 1px solid var(--secondary-500);
           border-top: 1px solid var(--secondary-500);

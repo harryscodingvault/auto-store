@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { medium } from "../../../utils/responsive";
+import { medium } from "../../utils/responsive";
 
 export const Wrapper = styled.div`
   width: 96vw;
@@ -14,14 +14,20 @@ export const Wrapper = styled.div`
     border-bottom: 5px solid var(--secondary-500);
     color: var(--secondary-500);
   }
-  .creator {
+  .stats {
+    margin-top: 1rem;
     display: flex;
+    flex-wrap: wrap;
     flex-direction: row;
     justify-content: center;
     gap: 1rem;
-
-    span {
-      color: var(--secondary-500);
+    .stat-group {
+      display: flex;
+      flex-direction: row
+      flex: 1;
+      span {
+        color: var(--secondary-500);
+      }
     }
   }
   .list-options {

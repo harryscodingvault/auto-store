@@ -25,14 +25,14 @@ const initialState = {
 export const getAllProposals: any = createAsyncThunk(
   "allProposals/getProposals",
   async (_, thunkAPI: any) => {
-    let url = "/proposal";
+    let url = "proposal?creator=me&isPrivate=true";
     try {
       const resp = await originAPI.get(url, {
         headers: {
           authorization: `Bearer ${thunkAPI.getState().user.user.token}`,
         },
       });
-      console.log(resp.data);
+
       return resp.data;
     } catch (error: any) {
       if (error.response.status === 401) {
@@ -53,8 +53,9 @@ const allProposalSlice = createSlice({
       state.isLoading = true;
     },
     [getAllProposals.fulfilled]: (state, { payload }) => {
+      const { proposals } = payload;
       state.isLoading = false;
-      state.proposals = payload;
+      state.proposals = proposals;
     },
     [getAllProposals.rejected]: (state, { payload }) => {
       state.isLoading = false;

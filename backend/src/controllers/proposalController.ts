@@ -117,8 +117,8 @@ export const getAllProposals = async (
     queryObject.createdBy = userId;
 
     result = Proposal.find(queryObject)
-      .populate("options", ["name", "count"])
-      .populate("createdBy", "username");
+      .populate("options", ["name", "count", "url"])
+      .populate("createdBy", ["username"]);
   }
   if (creator === "any") {
     if (search) {
