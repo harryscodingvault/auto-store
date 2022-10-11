@@ -9,49 +9,36 @@ const PageRequestBar = () => {
 
   console.log(page);
 
-  const pages = Array.from({ length: numOfPages }, (_, index) => {
-    return index + 1;
-  });
   const nextPage = () => {
-    let newPage = page + 1;
-    if (newPage > numOfPages) {
-      newPage = 1;
-    }
+    let newPage = Number(page) + 1;
+
     dispatch(changePage(newPage));
   };
 
   const prevPage = () => {
-    let newPage = page - 1;
-    if (newPage <= 0) {
-      newPage = numOfPages;
+    let newPage = Number(page) - 1;
+    if (newPage === 1) {
+      newPage = 1;
     }
+
     dispatch(changePage(newPage));
   };
 
   return (
     <Wrapper>
-      <div className="btn" onClick={() => prevPage()}>
-        <h5>Prev</h5>
-      </div>
-      <div className="page-btn-list">
-        {pages.map((pageNumber) => {
-          if (pageNumber - 2 <= page && pageNumber + 2 >= page) {
-            return (
-              <div
-                className={`btn ${pageNumber === page && "pageOn"}`}
-                key={pageNumber}
-                onClick={() => dispatch(changePage(pageNumber))}
-              >
-                <h5>{pageNumber}</h5>
-              </div>
-            );
-          }
-        })}
-      </div>
+      {page !== "1" && (
+        <div className="btn" onClick={() => prevPage()}>
+          <h5>Prev</h5>
+        </div>
+      )}
 
-      <div className="btn" onClick={() => nextPage()}>
-        <h5>Next</h5>
-      </div>
+      <h5 className="page">Page:{page}</h5>
+
+      {numOfPages !== 1 && (
+        <div className="btn" onClick={() => nextPage()}>
+          <h5>Next</h5>
+        </div>
+      )}
     </Wrapper>
   );
 };

@@ -9,16 +9,7 @@ export const Wrapper = styled.div`
   width: 100%;
   gap: 0.5em;
 
-  .page-btn-list {
-    display: flex;
-    flex-direction: row;
-    gap: 0.5em;
-
-    .pageOn {
-      background-color: var(--secondary-500);
-      h5 {
-        color: var(--primary-500);
-      }
-    }
+  .page {
+    color: var(--secondary-500);
   }
 `;
