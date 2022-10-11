@@ -5,10 +5,10 @@ import SingleCard from "../../components/SingleCard/SingleCard";
 import Modal from "../../components/Modal/Modal";
 import SortingBar from "../../components/SortingBar/SortingBar";
 import { getAllProposals } from "../../redux/allProposals/allProposalsSlice";
-import { Wrapper } from "./PrivateProposals.style";
+import { Wrapper } from "./ProposalsDisplay.style";
 import PageRequestBar from "../../components/PageRequestBar/PageRequestBar";
 
-const PrivateProposals = () => {
+const ProposalsDisplay = ({ urlType }: { urlType: string }) => {
   const {
     isLoading,
     proposals,
@@ -19,11 +19,9 @@ const PrivateProposals = () => {
   } = useSelector((store: any) => store.allProposals);
   const dispatch = useDispatch();
 
-  console.log(page);
-
   useEffect(() => {
-    dispatch(getAllProposals());
-  }, [dispatch]);
+    dispatch(getAllProposals(urlType));
+  }, [dispatch, urlType, page]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -46,4 +44,4 @@ const PrivateProposals = () => {
   );
 };
 
-export default PrivateProposals;
+export default ProposalsDisplay;

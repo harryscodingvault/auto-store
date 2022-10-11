@@ -17,7 +17,7 @@ export const Wrapper = styled.div`
     .pageOn {
       background-color: var(--secondary-500);
       h5 {
-        color: var(--primary-800);
+        color: var(--primary-500);
       }
     }
   }

@@ -107,7 +107,7 @@ export const getAllProposals = async (
   const userId = res.locals.user._id;
 
   //FILTERS
-  const { isActive, creator, isPrivate, sort, search } = req.query;
+  const { isActive, creator, isPrivate, sort, search, page, limit } = req.query;
 
   const queryObject: any = {};
   let result: any;
@@ -155,11 +155,11 @@ export const getAllProposals = async (
   if (sort === "z-a") {
     result = result.sort("-title");
   }
-
+  console.log(limit, page);
   //PAGINATION
-  const page = parseInt(req.params.page) || 1;
-  const limit = parseInt(req.params.limit) || 10;
-  const skip = (page - 1) * limit;
+  const currPage = Number(page) || 1;
+  const currLimit = Number(limit) || 10;
+  const skip = (currPage - 1) * currLimit;
 
   try {
     result = result.skip(skip).limit(limit);

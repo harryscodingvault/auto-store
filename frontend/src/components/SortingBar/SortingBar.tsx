@@ -3,10 +3,11 @@ import { useSelector } from "react-redux";
 import { Wrapper } from "./SortingBar.style";
 
 const SortingBar = () => {
-  const { totalProposals } = useSelector((store: any) => store.allProposals);
+  const { totalProposals, sortOptions } = useSelector(
+    (store: any) => store.allProposals
+  );
   const [select, setSelect] = useState(false);
   const [optionSelected, setOptionSelect] = useState("new");
-  const sortingOptions = ["new", "old", "a-z", "z-a"];
 
   return (
     <Wrapper>
@@ -21,7 +22,7 @@ const SortingBar = () => {
 
           {select && (
             <div className="select-sorts">
-              {sortingOptions.map((item, index) => {
+              {sortOptions.map((item: string, index: number) => {
                 return (
                   <div
                     key={index}

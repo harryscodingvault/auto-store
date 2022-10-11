@@ -6,9 +6,6 @@ import { logoutUser } from "../user/userSlice";
 
 const initialFilterState = {
   search: "",
-  isActive: true,
-  isPrivate: true,
-  createdByUser: true,
   sort: "latest",
   sortOptions: ["latest", "oldest", "a-z", "z-a"],
 };
@@ -20,6 +17,7 @@ const initialState = {
   numOfPages: 1,
   page: 1,
   totalProposals: 0,
+  currentURL: "private",
 
   stats: {},
   errorMessage: "",
@@ -28,8 +26,25 @@ const initialState = {
 
 export const getAllProposals: any = createAsyncThunk(
   "allProposals/getProposals",
-  async (_, thunkAPI: any) => {
-    let url = "proposal?creator=me&isPrivate=true";
+  async (urlType: string, thunkAPI: any) => {
+    const { sort, page, search, currentURL } = thunkAPI.getState().allProposals;
+    let url = "proposal";
+    if (urlType !== currentURL) {
+      updateUrl(currentURL);
+    }
+    if (urlType === "private") {
+      url += "?creator=me&isPrivate=true";
+    }
+    if (urlType === "shared") {
+      url += "?creator=me&isPrivate=false";
+    }
+    if (urlType === "active") {
+      url += "?creator=any&isActive=true";
+    }
+    if (urlType === "expired") {
+      url += "?creator=any&isActive=false";
+    }
+    url += `&sort=${sort}&page=${page}&search=${search}`;
     try {
       const resp = await originAPI.get(url, authHeader(thunkAPI));
 
@@ -47,7 +62,15 @@ export const getAllProposals: any = createAsyncThunk(
 const allProposalSlice = createSlice({
   name: "allProposals",
   initialState,
-  reducers: {},
+  reducers: {
+    changePage: (state, { payload }) => {
+      state.page = payload;
+    },
+    updateUrl: (state, { payload }) => {
+      state.currentURL = payload;
+      state.page = 1;
+    },
+  },
   extraReducers: {
     //GET ALL PROPOSALS
     [getAllProposals.pending]: (state) => {
@@ -67,5 +90,7 @@ const allProposalSlice = createSlice({
     },
   },
 });
+
+export const { changePage, updateUrl } = allProposalSlice.actions;
 
 export default allProposalSlice.reducer;
