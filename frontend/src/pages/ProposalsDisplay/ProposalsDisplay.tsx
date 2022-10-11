@@ -4,7 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import SingleCard from "../../components/SingleCard/SingleCard";
 import Modal from "../../components/Modal/Modal";
 import SortingBar from "../../components/SortingBar/SortingBar";
-import { getAllProposals } from "../../redux/allProposals/allProposalsSlice";
+import {
+  getAllProposals,
+  updateUrl,
+} from "../../redux/allProposals/allProposalsSlice";
 import { Wrapper } from "./ProposalsDisplay.style";
 import PageRequestBar from "../../components/PageRequestBar/PageRequestBar";
 
@@ -17,12 +20,16 @@ const ProposalsDisplay = ({ urlType }: { urlType: string }) => {
     page,
     totalProposals,
     sort,
+    currentURL,
   } = useSelector((store: any) => store.allProposals);
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (currentURL !== urlType) {
+      dispatch(updateUrl(urlType));
+    }
     dispatch(getAllProposals(urlType));
-  }, [dispatch, urlType, page, sort]);
+  }, [dispatch, urlType, page, sort, currentURL]);
 
   if (isLoading) {
     return <Wrapper>Loading...</Wrapper>;

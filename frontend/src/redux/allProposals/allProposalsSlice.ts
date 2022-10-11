@@ -26,12 +26,10 @@ const initialState = {
 
 export const getAllProposals: any = createAsyncThunk(
   "allProposals/getProposals",
-  async (urlType: string, thunkAPI: any) => {
+  async (urlType: string = "private", thunkAPI: any) => {
     const { sort, page, search, currentURL } = thunkAPI.getState().allProposals;
     let url = "proposal";
-    if (urlType !== currentURL) {
-      updateUrl(currentURL);
-    }
+
     if (urlType === "private") {
       url += "?creator=me&isPrivate=true";
     }

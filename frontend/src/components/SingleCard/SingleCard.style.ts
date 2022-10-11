@@ -103,7 +103,7 @@ export const Wrapper = styled.div`
     width: 95%;
     margin: auto;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 0.5rem;
     margin-top: 1rem;
     margin-bottom: 1rem;
@@ -115,16 +115,20 @@ export const Wrapper = styled.div`
     .btn {
       flex: 1;
       text-align: center;
-      border: 1px solid var(--grey-50);
-      background-color: var(--red-dark);
-      h5 {
-        color: var(--grey-50);
+      color: var(--secondary-500);
+      font-size: 1rem;
+
+      .icon {
+        font-size: 1.2rem;
+        margin: 0;
+        vertical-align: middle;
       }
       :hover {
-        background-color: var(--red-light);
+        background-color: var(--secondary-500);
+        color: var(--primary-500);
       }
       :active {
-        background-color: var(--red-light);
+        background-color: var(--secondary-100);
       }
     }
   }

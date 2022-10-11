@@ -2,14 +2,16 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { proposalInterface } from "../../types/proposalType";
 import { format } from "date-fns";
-
+import { FaRegEdit } from "react-icons/fa";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { AiOutlineShareAlt } from "react-icons/ai";
 import { Wrapper } from "./SingleCard.style";
 import {
   deleteProposal,
   editProposal,
   setEditProposal,
 } from "../../redux/proposal/proposalSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const SingleCard = ({ item }: { item: any }) => {
   const navigate = useNavigate();
@@ -27,6 +29,9 @@ const SingleCard = ({ item }: { item: any }) => {
   } = item;
 
   const dispatch = useDispatch();
+  const { currentURL } = useSelector((store: any) => store.allProposals);
+
+  //console.log(currentURL);
 
   return (
     <Wrapper>
@@ -67,22 +72,30 @@ const SingleCard = ({ item }: { item: any }) => {
         </div>
       )}
       <div className="edit-group">
-        <div
-          className="btn"
-          onClick={() => {
-            dispatch(setEditProposal(item));
-            navigate("/workshop/create");
-          }}
-        >
-          <h5>Edit</h5>
-        </div>
-        <div
-          className="btn"
-          onClick={() => {
-            dispatch(deleteProposal(_id));
-          }}
-        >
-          <h5>Delete</h5>
+        {currentURL === "private" && (
+          <>
+            <div
+              className="btn"
+              onClick={() => {
+                dispatch(setEditProposal(item));
+                navigate("/workshop/create");
+              }}
+            >
+              <FaRegEdit className="icon" />
+            </div>
+            <div
+              className="btn"
+              onClick={() => {
+                dispatch(deleteProposal(_id));
+              }}
+            >
+              <RiDeleteBinLine className="icon" />
+            </div>
+          </>
+        )}
+
+        <div className="btn">
+          <AiOutlineShareAlt className="icon" />
         </div>
       </div>
     </Wrapper>
