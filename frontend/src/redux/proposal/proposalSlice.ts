@@ -12,6 +12,7 @@ import { logoutUser } from "../user/userSlice";
 const initialState = {
   isLoading: false,
   proposal: {},
+  proposalToShare: {},
   errorMessage: "",
   isEditing: false,
 };

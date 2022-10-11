@@ -132,4 +132,25 @@ export const Wrapper = styled.div`
       }
     }
   }
+  .qr-container {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    .qr-code {
+      border: 10px solid var(--secondary-500);
+      cursor: pointer;
+      &:hover {
+        border-color: var(--primary-500);
+      }
+      &:active {
+        border-color: var(--primary-200);
+      }
+    }
+    .alert-success {
+      width: 50%;
+    }
+  }
 `;
