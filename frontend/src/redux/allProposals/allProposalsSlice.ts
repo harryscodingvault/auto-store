@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import originAPI from "../../utils/api";
+import originAPI, { checkForUnauthorizedResponse } from "../../utils/api";
 import authHeader from "../../utils/authHeader";
 
 import { logoutUser } from "../user/userSlice";
@@ -50,11 +50,7 @@ export const getAllProposals: any = createAsyncThunk(
 
       return resp.data;
     } catch (error: any) {
-      if (error.response.status === 401) {
-        thunkAPI.dispatch(logoutUser());
-        return thunkAPI.rejectWithValue("Unauthorized! Logging out...");
-      }
-      return thunkAPI.rejectWithValue(error.response.data.error);
+      return checkForUnauthorizedResponse(error, thunkAPI);
     }
   }
 );
