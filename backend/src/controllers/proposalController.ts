@@ -113,6 +113,9 @@ export const getAllProposals = async (
   let result: any;
 
   if (creator === "me") {
+    if (search) {
+      queryObject.title = { $regex: search, $options: "i" };
+    }
     queryObject.editOn = isPrivate === "true" ? true : false;
     queryObject.createdBy = userId;
 
@@ -155,7 +158,7 @@ export const getAllProposals = async (
   if (sort === "z-a") {
     result = result.sort("-title");
   }
-  console.log(limit, page);
+
   //PAGINATION
   const currPage = Number(page) || 1;
   const currLimit = Number(limit) || 10;

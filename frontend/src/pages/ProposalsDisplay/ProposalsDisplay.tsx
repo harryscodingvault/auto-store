@@ -10,6 +10,7 @@ import {
 } from "../../redux/allProposals/allProposalsSlice";
 import { Wrapper } from "./ProposalsDisplay.style";
 import PageRequestBar from "../../components/PageRequestBar/PageRequestBar";
+import SearchBar from "../../components/SearchBar/SearchBar";
 
 const ProposalsDisplay = ({ urlType }: { urlType: string }) => {
   const {
@@ -20,6 +21,7 @@ const ProposalsDisplay = ({ urlType }: { urlType: string }) => {
     page,
     totalProposals,
     sort,
+    search,
     currentURL,
   } = useSelector((store: any) => store.allProposals);
   const dispatch = useDispatch();
@@ -29,30 +31,26 @@ const ProposalsDisplay = ({ urlType }: { urlType: string }) => {
       dispatch(updateUrl(urlType));
     }
     dispatch(getAllProposals(urlType));
-  }, [dispatch, urlType, page, sort, currentURL]);
-
-  if (isLoading) {
-    return <Wrapper>Loading...</Wrapper>;
-  }
-  if (proposals?.length === 0) {
-    return (
-      <Wrapper>
-        <SortingBar />
-        No proposals to display
-      </Wrapper>
-    );
-  }
+  }, [dispatch, urlType, page, sort, currentURL, search]);
 
   return (
     <Wrapper>
+      <SearchBar />
       <SortingBar />
 
-      <div className="list">
-        {proposals?.map((item: any) => (
-          <SingleCard item={item} key={item._id} />
-        ))}
-      </div>
-      <PageRequestBar />
+      {isLoading && <h5>Loading</h5>}
+
+      {proposals?.length === 0 && !isLoading && (
+        <h5>No proposals to display</h5>
+      )}
+      {proposals?.length >= 1 && !isLoading && (
+        <div className="list">
+          {proposals?.map((item: any) => (
+            <SingleCard item={item} key={item._id} />
+          ))}
+        </div>
+      )}
+      {proposals?.length >= 2 && !isLoading && <PageRequestBar />}
     </Wrapper>
   );
 };

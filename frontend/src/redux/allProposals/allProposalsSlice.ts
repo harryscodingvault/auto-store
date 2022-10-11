@@ -67,6 +67,9 @@ const allProposalSlice = createSlice({
     changeSort: (state, { payload }) => {
       state.sort = payload;
     },
+    changeSearchTerm: (state, { payload }) => {
+      state.search = payload;
+    },
     clearAllProposalsState: (state) => initialState,
   },
   extraReducers: {
@@ -89,7 +92,12 @@ const allProposalSlice = createSlice({
   },
 });
 
-export const { changeSort, changePage, updateUrl, clearAllProposalsState } =
-  allProposalSlice.actions;
+export const {
+  changeSearchTerm,
+  changeSort,
+  changePage,
+  updateUrl,
+  clearAllProposalsState,
+} = allProposalSlice.actions;
 
 export default allProposalSlice.reducer;

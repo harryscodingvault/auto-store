@@ -95,9 +95,7 @@ const proposalSlice = createSlice({
       state.isLoading = true;
     },
     [deleteProposal.fulfilled]: (state, { payload }) => {
-      const { proposal } = payload;
       state.isLoading = false;
-      state.proposal = proposal;
     },
     [deleteProposal.rejected]: (state, { payload }) => {
       state.isLoading = false;
