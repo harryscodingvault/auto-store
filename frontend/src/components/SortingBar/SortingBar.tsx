@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { changeSort } from "../../redux/allProposals/allProposalsSlice";
 import { Wrapper } from "./SortingBar.style";
@@ -9,6 +9,18 @@ const SortingBar = () => {
   );
   const [select, setSelect] = useState(false);
   const dispatch = useDispatch();
+  const btnRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const closeDropdown = (e: any) => {
+      if (e.path[1].className !== btnRef.current?.className) {
+        setSelect(false);
+      }
+    };
+    document.body.addEventListener("click", closeDropdown);
+
+    return () => document.body.removeEventListener("click", closeDropdown);
+  }, []);
 
   return (
     <Wrapper>
@@ -17,7 +29,11 @@ const SortingBar = () => {
         <h5>Sort By: </h5>
 
         <div className="select-group">
-          <div className="sort-req" onClick={() => setSelect(!select)}>
+          <div
+            className="sort-req"
+            onClick={() => setSelect(!select)}
+            ref={btnRef}
+          >
             <h5>{sort}</h5>
           </div>
 
