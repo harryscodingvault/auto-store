@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { changeSort } from "../../redux/allProposals/allProposalsSlice";
 import { Wrapper } from "./SortingBar.style";
 
 const SortingBar = () => {
-  const { totalProposals, sortOptions } = useSelector(
+  const { totalProposals, sortOptions, sort } = useSelector(
     (store: any) => store.allProposals
   );
   const [select, setSelect] = useState(false);
-  const [optionSelected, setOptionSelect] = useState("new");
+  const dispatch = useDispatch();
 
   return (
     <Wrapper>
@@ -17,7 +18,7 @@ const SortingBar = () => {
 
         <div className="select-group">
           <div className="sort-req" onClick={() => setSelect(!select)}>
-            <h5>{optionSelected}</h5>
+            <h5>{sort}</h5>
           </div>
 
           {select && (
@@ -28,8 +29,8 @@ const SortingBar = () => {
                     key={index}
                     className="select-btn"
                     onClick={() => {
-                      setOptionSelect(item);
                       setSelect(false);
+                      dispatch(changeSort(item));
                     }}
                   >
                     <h5>{item}</h5>

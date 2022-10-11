@@ -16,18 +16,24 @@ const ProposalsDisplay = ({ urlType }: { urlType: string }) => {
     numOfPages,
     page,
     totalProposals,
+    sort,
   } = useSelector((store: any) => store.allProposals);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getAllProposals(urlType));
-  }, [dispatch, urlType, page]);
+  }, [dispatch, urlType, page, sort]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Wrapper>Loading...</Wrapper>;
   }
   if (proposals?.length === 0) {
-    return <div>No proposals to display</div>;
+    return (
+      <Wrapper>
+        <SortingBar />
+        No proposals to display
+      </Wrapper>
+    );
   }
 
   return (

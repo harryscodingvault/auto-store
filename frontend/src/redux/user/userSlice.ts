@@ -6,6 +6,7 @@ import {
   getUserFromLocalStorage,
   removeUserFromLocalStorage,
 } from "../../utils/localStorage";
+import { clearAllProposalsState } from "../allProposals/allProposalsSlice";
 
 const initialState = {
   isLoading: false,
@@ -82,10 +83,26 @@ export const deleteUser: any = createAsyncThunk(
   }
 );
 
+export const clearStore: any = createAsyncThunk(
+  "user/clearStore",
+  async (message, thunkAPI: any) => {
+    try {
+      thunkAPI.dispatch(logoutUser(message));
+      thunkAPI.dispatch(clearAllProposalsState());
+      thunkAPI.dispatch(clearAllValues());
+      return Promise.resolve();
+    } catch (error: any) {
+      return Promise.reject();
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {},
+  reducers: {
+    clearAllValues: (state) => initialState,
+  },
   extraReducers: {
     //REGISTER USER
     [registerUser.pending]: (state) => {
@@ -156,7 +173,13 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.errorMessage = payload;
     },
+    //CLEAR STORE
+    [clearStore.rejected]: (state) => {
+      state.errorMessage = "There was an error clearing store!";
+    },
   },
 });
+
+export const { clearAllValues } = userSlice.actions;
 
 export default userSlice.reducer;

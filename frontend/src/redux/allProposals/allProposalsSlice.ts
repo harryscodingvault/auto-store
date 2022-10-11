@@ -70,6 +70,10 @@ const allProposalSlice = createSlice({
       state.currentURL = payload;
       state.page = 1;
     },
+    changeSort: (state, { payload }) => {
+      state.sort = payload;
+    },
+    clearAllProposalsState: (state) => initialState,
   },
   extraReducers: {
     //GET ALL PROPOSALS
@@ -91,6 +95,7 @@ const allProposalSlice = createSlice({
   },
 });
 
-export const { changePage, updateUrl } = allProposalSlice.actions;
+export const { changeSort, changePage, updateUrl, clearAllProposalsState } =
+  allProposalSlice.actions;
 
 export default allProposalSlice.reducer;

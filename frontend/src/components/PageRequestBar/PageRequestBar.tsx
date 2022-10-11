@@ -7,8 +7,6 @@ const PageRequestBar = () => {
   const { numOfPages, page } = useSelector((store: any) => store.allProposals);
   const dispatch = useDispatch();
 
-  console.log(page);
-
   const nextPage = () => {
     let newPage = Number(page) + 1;
 
