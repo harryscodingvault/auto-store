@@ -38,10 +38,10 @@ const ProposalsDisplay = ({ urlType }: { urlType: string }) => {
       <SearchBar />
       <SortingBar />
 
-      {isLoading && <h5>Loading</h5>}
+      {isLoading && <div className="spinner"></div>}
 
       {proposals?.length === 0 && !isLoading && (
-        <h5>No proposals to display</h5>
+        <h5 className="not-found">No proposals found</h5>
       )}
       {proposals?.length >= 1 && !isLoading && (
         <div className="list">

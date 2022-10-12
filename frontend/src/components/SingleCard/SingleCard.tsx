@@ -27,7 +27,6 @@ const SingleCard = ({ item }: { item: any }) => {
     chosenProposal,
     active,
     deadline,
-    editOn,
     totalVotes,
     createdBy,
   } = item;
