@@ -9,13 +9,16 @@ import { useNavigate } from "react-router-dom";
 const Registration = () => {
   const [login, setLogin] = useState(true);
   const { user } = useSelector((store: any) => store.user);
+  const { sharedProposal } = useSelector((store: any) => store.proposal);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) {
+    if (sharedProposal.id && user) {
+      navigate(`/shared/${sharedProposal.id}`);
+    } else if (user) {
       navigate("/home");
     }
-  }, [user, navigate]);
+  }, [user, navigate, sharedProposal]);
 
   return (
     <Wrapper>

@@ -41,7 +41,6 @@ export const getProposal: any = createAsyncThunk(
         `proposal/${proposalId}`,
         authHeader(thunkAPI)
       );
-      thunkAPI.dispatch(getAllProposals());
       return resp.data;
     } catch (error: any) {
       return checkForUnauthorizedResponse(error, thunkAPI);
@@ -82,6 +81,25 @@ export const editProposal: any = createAsyncThunk(
   }
 );
 
+export const voteProposal: any = createAsyncThunk(
+  "allProposals/editProposal",
+  async ({ proposalId, proposalData }: any, thunkAPI: any) => {
+    const { currentURL, page } = thunkAPI.getState().allProposals;
+
+    try {
+      const resp = await originAPI.post(
+        `vote/${proposalId}`,
+        proposalData,
+        authHeader(thunkAPI)
+      );
+      thunkAPI.dispatch(getAllProposals(currentURL));
+      return resp.data;
+    } catch (error: any) {
+      return checkForUnauthorizedResponse(error, thunkAPI);
+    }
+  }
+);
+
 const proposalSlice = createSlice({
   name: "proposal",
   initialState,
@@ -95,7 +113,6 @@ const proposalSlice = createSlice({
       state.proposal = {};
     },
     setSharedProposalId: (state, { payload }) => {
-      console.log(payload);
       state.sharedProposal.id = payload;
     },
     clearSharedProposal: (state) => {
@@ -136,6 +153,18 @@ const proposalSlice = createSlice({
       state.isEditing = false;
     },
     [editProposal.rejected]: (state, { payload }) => {
+      state.isLoading = false;
+      state.errorMessage = payload;
+    },
+    //VOTE PROPOSAL
+    [voteProposal.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [voteProposal.fulfilled]: (state, { payload }) => {
+      state.isLoading = false;
+      state.isEditing = false;
+    },
+    [voteProposal.rejected]: (state, { payload }) => {
       state.isLoading = false;
       state.errorMessage = payload;
     },

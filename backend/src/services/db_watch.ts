@@ -19,6 +19,8 @@ export const closeProposalOnCapacity = async (proposal: any) => {
       proposalId: proposal._id,
       count: maxValOption.count,
     });
+    allMaxOptions.map((item) => item);
+
     await proposal.updateOne({
       active: false,
       totalVotes: proposal.capacity,

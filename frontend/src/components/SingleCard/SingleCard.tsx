@@ -11,6 +11,7 @@ import {
   deleteProposal,
   editProposal,
   setEditProposal,
+  voteProposal,
 } from "../../redux/proposal/proposalSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -115,6 +116,18 @@ const SingleCard = ({ item }: { item: any }) => {
           <li
             className={`option-item ${item.selected && "selected"}`}
             key={item._id}
+            onClick={() => {
+              dispatch(
+                voteProposal({
+                  proposalId: _id,
+                  proposalData: { optionId: item._id },
+                })
+              );
+              if (isSharedUrl) {
+                dispatch(clearSharedProposal());
+                navigate("/");
+              }
+            }}
           >
             <p>{item.count || 0}</p>
             <p>{item.name}</p>
@@ -122,12 +135,30 @@ const SingleCard = ({ item }: { item: any }) => {
         ))}
       </ul>
       {!active && (
-        <div className="result">
-          <h5>Passed:</h5>
-          {chosenProposal.map((item: string) => (
-            <h5>{item}</h5>
-          ))}
-        </div>
+        <table className="result">
+          <thead>
+            <tr>
+              <th>
+                <h5>Passed</h5>
+              </th>
+              <th>
+                <h5>Count</h5>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {chosenProposal.map((item: any) => (
+              <tr key={item._id}>
+                <td>
+                  <h5>{item.name}</h5>
+                </td>
+                <td>
+                  <h5>{item.count}</h5>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
       <div className="edit-group">
         {currentURL === "private" && !isSharedUrl && (

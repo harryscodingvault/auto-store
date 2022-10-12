@@ -18,14 +18,13 @@ const Shared = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (!sharedProposal.id) {
+      dispatch(setSharedProposalId(id));
+    }
     if (!user) {
       navigate("/");
-    } else {
-      if (!sharedProposal.id) {
-        dispatch(setSharedProposalId(id));
-      }
-      dispatch(getProposal(id));
     }
+    dispatch(getProposal(id));
   }, [dispatch]);
 
   return (

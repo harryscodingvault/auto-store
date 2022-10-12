@@ -7,10 +7,13 @@ import { Wrapper } from "./Landing.style";
 const Landing = () => {
   const navigate = useNavigate();
   const { isLoading, user } = useSelector((store: any) => store.user);
+  const { sharedProposal } = useSelector((store: any) => store.proposal);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (user) {
+    if (sharedProposal.id && user) {
+      navigate(`shared/${sharedProposal.id}`);
+    } else if (user) {
       navigate("home");
     }
   });

@@ -86,16 +86,13 @@ export const Wrapper = styled.div`
   }
 
   .result {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1rem;
-    h5:nth-child(1) {
+    width: 90%;
+    margin: auto;
+    text-align: center;
+
+    th {
       color: var(--secondary-500);
-    }
-    h5:nth-child(2) {
-      padding: 0 0.5rem;
+      border: 1px solid var(--secondary-500);
     }
   }
 
