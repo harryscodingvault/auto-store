@@ -76,9 +76,9 @@ export const deleteUser: any = createAsyncThunk(
 
 export const clearStore: any = createAsyncThunk(
   "user/clearStore",
-  async (message, thunkAPI: any) => {
+  async (_, thunkAPI: any) => {
     try {
-      thunkAPI.dispatch(logoutUser(message));
+      thunkAPI.dispatch(logoutUser());
       thunkAPI.dispatch(clearAllProposalsState());
       thunkAPI.dispatch(clearAllValues());
       return Promise.resolve();

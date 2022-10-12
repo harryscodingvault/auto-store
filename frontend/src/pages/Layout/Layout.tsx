@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
 import Footer from "../../components/Footer/Footer";
@@ -7,6 +7,7 @@ import { Wrapper } from "./Layout.style";
 
 const Layout = () => {
   const { user } = useSelector((store: any) => store.user);
+
   if (!user) {
     return <Navigate to="/" />;
   }

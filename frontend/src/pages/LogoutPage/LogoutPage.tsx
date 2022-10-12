@@ -13,7 +13,7 @@ const LogoutPage = () => {
     <Wrapper>
       <h5>Ready to leave?</h5>
       <div className="btn-group">
-        <div className="btn" onClick={() => dispatch(clearStore("Leaving..."))}>
+        <div className="btn" onClick={() => dispatch(clearStore())}>
           <h5>Yes</h5>
         </div>
         <div className="btn" onClick={() => navigate(-1)}>
