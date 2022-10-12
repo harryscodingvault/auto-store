@@ -19,6 +19,7 @@ import AccountLayout from "./pages/AccountLayout/AccountLayout";
 import EditProfile from "./pages/EditProfile/EditProfile";
 import LogoutPage from "./pages/LogoutPage/LogoutPage";
 import ProposalsDisplay from "./pages/ProposalsDisplay/ProposalsDisplay";
+import Shared from "./pages/Shared/Shared";
 
 function App() {
   return (
@@ -27,6 +28,9 @@ function App() {
         <Route path="/">
           <Route index element={<Landing />} />
           <Route path="registration" element={<Registration />} />
+          <Route path="shared">
+            <Route path=":id" element={<Shared />} />
+          </Route>
           <Route element={<Layout />}>
             <Route path="home" element={<HomeLayout />}>
               <Route

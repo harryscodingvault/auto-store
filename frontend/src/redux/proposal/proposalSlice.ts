@@ -12,7 +12,7 @@ import { logoutUser } from "../user/userSlice";
 const initialState = {
   isLoading: false,
   proposal: {},
-  proposalToShare: {},
+  sharedProposal: { id: "", data: {} },
   errorMessage: "",
   isEditing: false,
 };
@@ -26,6 +26,22 @@ export const createProposal: any = createAsyncThunk(
         proposal,
         authHeader(thunkAPI)
       );
+      return resp.data;
+    } catch (error: any) {
+      return checkForUnauthorizedResponse(error, thunkAPI);
+    }
+  }
+);
+
+export const getProposal: any = createAsyncThunk(
+  "allProposals/getProposal",
+  async (proposalId, thunkAPI: any) => {
+    try {
+      const resp = await originAPI.get(
+        `proposal/${proposalId}`,
+        authHeader(thunkAPI)
+      );
+      thunkAPI.dispatch(getAllProposals());
       return resp.data;
     } catch (error: any) {
       return checkForUnauthorizedResponse(error, thunkAPI);
@@ -78,6 +94,13 @@ const proposalSlice = createSlice({
       state.isEditing = false;
       state.proposal = {};
     },
+    setSharedProposalId: (state, { payload }) => {
+      console.log(payload);
+      state.sharedProposal.id = payload;
+    },
+    clearSharedProposal: (state) => {
+      state.sharedProposal = initialState.sharedProposal;
+    },
   },
   extraReducers: {
     //CREATE PROPOSAL
@@ -116,8 +139,27 @@ const proposalSlice = createSlice({
       state.isLoading = false;
       state.errorMessage = payload;
     },
+    //GET PROPOSAL
+    [getProposal.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [getProposal.fulfilled]: (state, { payload }) => {
+      state.isLoading = false;
+      state.sharedProposal.data = payload;
+
+      state.isEditing = false;
+    },
+    [getProposal.rejected]: (state, { payload }) => {
+      state.isLoading = false;
+      state.errorMessage = payload;
+    },
   },
 });
-export const { setEditProposal, setEditProposalFalse } = proposalSlice.actions;
+export const {
+  setSharedProposalId,
+  clearSharedProposal,
+  setEditProposal,
+  setEditProposalFalse,
+} = proposalSlice.actions;
 
 export default proposalSlice.reducer;

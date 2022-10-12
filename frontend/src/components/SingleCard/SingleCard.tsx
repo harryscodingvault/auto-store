@@ -7,6 +7,7 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { AiOutlineShareAlt } from "react-icons/ai";
 import { Wrapper } from "./SingleCard.style";
 import {
+  clearSharedProposal,
   deleteProposal,
   editProposal,
   setEditProposal,
@@ -35,6 +36,7 @@ const SingleCard = ({ item }: { item: any }) => {
   const [sharing, setSharing] = useState(false);
   const [copyToClipboard, setCopyToClipboard] = useState(false);
   const proposalUrl = window.location.origin + `/shared/${_id}`;
+  const isSharedUrl = window.location.pathname.includes("/shared/");
 
   if (sharing) {
     return (
@@ -128,7 +130,7 @@ const SingleCard = ({ item }: { item: any }) => {
         </div>
       )}
       <div className="edit-group">
-        {currentURL === "private" && (
+        {currentURL === "private" && !isSharedUrl && (
           <>
             <div
               className="btn"
@@ -149,10 +151,21 @@ const SingleCard = ({ item }: { item: any }) => {
             </div>
           </>
         )}
-
-        <div className="btn" onClick={() => setSharing(true)}>
-          <AiOutlineShareAlt className="icon" />
-        </div>
+        {isSharedUrl ? (
+          <div
+            className="btn"
+            onClick={() => {
+              dispatch(clearSharedProposal());
+              navigate("/");
+            }}
+          >
+            <h5>Vote Later</h5>
+          </div>
+        ) : (
+          <div className="btn" onClick={() => setSharing(true)}>
+            <AiOutlineShareAlt className="icon" />
+          </div>
+        )}
       </div>
     </Wrapper>
   );

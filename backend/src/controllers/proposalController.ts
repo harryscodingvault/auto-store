@@ -62,6 +62,7 @@ export const getProposal = async (
         _id,
       },
       {
+        createdBy: 1,
         proposalId: 1,
         title: 1,
         deadline: 1,
@@ -72,7 +73,9 @@ export const getProposal = async (
         chosenProposal: 1,
         totalVotes: 1,
       }
-    ).populate("options", "name");
+    )
+      .populate("options", ["name", "count", "url"])
+      .populate("createdBy", ["username"]);
 
     if (!proposal) {
       return res.status(StatusCodes.NOT_FOUND).send();
@@ -128,6 +131,7 @@ export const getAllProposals = async (
       queryObject.title = { $regex: search, $options: "i" };
     }
     queryObject.active = isActive === "true" ? true : false;
+    queryObject.editOn = false;
     try {
       let votedProposals: any = await Voter.aggregate([
         {
