@@ -58,14 +58,16 @@ export const loginUser = async (
         .send({ error: "User does not exist!" });
     }
 
-    const passwordCredentials = await comparePassword(
-      password,
-      userExist.password
-    );
-    if (!passwordCredentials) {
-      return res
-        .status(StatusCodes.METHOD_NOT_ALLOWED)
-        .send({ error: "Passwords does not match!" });
+    if (userExist.password) {
+      const passwordCredentials = await comparePassword(
+        password,
+        userExist.password
+      );
+      if (!passwordCredentials) {
+        return res
+          .status(StatusCodes.METHOD_NOT_ALLOWED)
+          .send({ error: "Passwords does not match!" });
+      }
     }
 
     const token = await createJWT(userExist._id);

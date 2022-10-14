@@ -20,6 +20,7 @@ import EditProfile from "./pages/EditProfile/EditProfile";
 import LogoutPage from "./pages/LogoutPage/LogoutPage";
 import ProposalsDisplay from "./pages/ProposalsDisplay/ProposalsDisplay";
 import Shared from "./pages/Shared/Shared";
+import LoginSuccess from "./pages/Registration/LoginSuccess/LoginSuccess";
 
 function App() {
   return (
@@ -28,6 +29,8 @@ function App() {
         <Route path="/">
           <Route index element={<Landing />} />
           <Route path="registration" element={<Registration />} />
+          <Route path="login/success" element={<LoginSuccess />} />
+
           <Route path="shared">
             <Route path=":id" element={<Shared />} />
           </Route>

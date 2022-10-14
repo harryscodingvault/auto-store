@@ -22,8 +22,10 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
       selected: false,
+    },
+    googleId: {
+      type: String,
     },
     tokens: [{ token: { type: String, required: true } }],
   },
