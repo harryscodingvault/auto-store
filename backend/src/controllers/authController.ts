@@ -85,6 +85,30 @@ export const loginUser = async (
   }
 };
 
+export const loginUserOauth = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { _id }: any = req.user;
+    const user: any = await User.findOne({ _id });
+
+    const token = await createJWT(_id);
+    user.tokens = user.tokens.concat({ token });
+    await user.save();
+
+    res.status(StatusCodes.OK).json({
+      username: user.username,
+      email: user.email,
+      _id,
+      token,
+    });
+  } catch (error) {
+    res.status(StatusCodes.BAD_REQUEST).send(error);
+  }
+};
+
 export const logoutUser = async (
   req: Request,
   res: Response,
