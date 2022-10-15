@@ -1,11 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import originAPI, { checkForUnauthorizedResponse } from "../../utils/api";
 import authHeader from "../../utils/authHeader";
-import {
-  addUserToLocalStorage,
-  getUserFromLocalStorage,
-  removeUserFromLocalStorage,
-} from "../../utils/localStorage";
+
 import { getAllProposals } from "../allProposals/allProposalsSlice";
 
 const initialState = {

@@ -9,7 +9,6 @@ passport.use(
       clientID: `${process.env.CLIENT_ID}`,
       clientSecret: `${process.env.CLIENT_SECRET}`,
       callbackURL: `${process.env.GOOGLE_CALLBACK_URL}`,
-      passReqToCallback: true,
     },
     async (
       req: any,
@@ -30,11 +29,7 @@ passport.use(
           await new User(defaultUser).save();
         }
 
-        if (user) {
-          req.user = user;
-
-          return cb(null, user);
-        }
+        return cb(null, user);
       } catch (error) {
         console.log(error);
         cb(error, null);
@@ -43,10 +38,16 @@ passport.use(
   )
 );
 
+//SAVE SESSION TO COOKIE
 passport.serializeUser((user: any, cb) => {
-  cb(null, user);
+  process.nextTick(function () {
+    cb(null, user.id);
+  });
 });
 
+//READ INFO FROM COOKIE
 passport.deserializeUser((user: any, cb) => {
-  cb(null, user);
+  process.nextTick(function () {
+    return cb(null, user);
+  });
 });

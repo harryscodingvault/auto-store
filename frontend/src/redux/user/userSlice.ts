@@ -75,14 +75,10 @@ export const logoutUser: any = createAsyncThunk(
   "user/logoutUser",
   async (_, thunkAPI: any) => {
     try {
-      const token = thunkAPI.getState().user.user.token;
-      console.log(token);
       const resp = await originAPI.post("auth/logout", _, authHeader(thunkAPI));
-      console.log(resp.data);
       return resp.data;
     } catch (error: any) {
-      console.log(error);
-      return checkForUnauthorizedResponse(error, thunkAPI);
+      return thunkAPI.rejectWithValue(error.response.data.error);
     }
   }
 );
@@ -103,9 +99,10 @@ export const clearStore: any = createAsyncThunk(
   "user/clearStore",
   async (_, thunkAPI: any) => {
     try {
-      // thunkAPI.dispatch(logoutUser());
       thunkAPI.dispatch(clearAllProposalsState());
       thunkAPI.dispatch(clearAllValues());
+      console.log("clear values");
+      thunkAPI.dispatch(logoutUser());
       return Promise.resolve();
     } catch (error: any) {
       return Promise.reject();
@@ -163,14 +160,14 @@ const userSlice = createSlice({
 
       state.errorMessage = payload;
     },
-    //LOGOUT USER
+    //DELETE USER
     [deleteUser.pending]: (state) => {
       state.isLoading = true;
     },
     [deleteUser.fulfilled]: (state) => {
-      removeUserFromLocalStorage();
       state.isLoading = false;
       state.user = null;
+      removeUserFromLocalStorage();
     },
     [deleteUser.rejected]: (state, { payload }) => {
       state.isLoading = false;
@@ -179,16 +176,10 @@ const userSlice = createSlice({
     //LOGOUT USER
     [logoutUser.pending]: (state) => {
       state.isLoading = true;
+      state.user = null;
+      removeUserFromLocalStorage();
     },
-    [logoutUser.fulfilled]: (state, { payload }) => {
-      //removeUserFromLocalStorage();
-      state.isLoading = false;
-      //state.user = null;
-    },
-    [logoutUser.rejected]: (state, { payload }) => {
-      state.isLoading = false;
-      state.errorMessage = payload;
-    },
+
     //CLEAR STORE
     [clearStore.rejected]: (state) => {
       state.errorMessage = "There was an error clearing store!";

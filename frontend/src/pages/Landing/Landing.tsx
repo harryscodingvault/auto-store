@@ -12,16 +12,13 @@ const Landing = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(loginUserOauth2());
     if (sharedProposal.id && user) {
       navigate(`shared/${sharedProposal.id}`);
     } else if (user) {
       navigate("home");
     }
-  }, []);
-
-  useEffect(() => {
-    dispatch(loginUserOauth2());
-  }, []);
+  }, [user, sharedProposal.id, dispatch, navigate]);
 
   const openGoogleAuth = async () => {
     const googleLoginURL = `http://localhost:5000/api/auth/login/google`;

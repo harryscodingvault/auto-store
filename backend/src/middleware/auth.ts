@@ -9,7 +9,6 @@ export const authenticateUser = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log(req.headers);
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer")) {

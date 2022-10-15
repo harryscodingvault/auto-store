@@ -91,17 +91,19 @@ export const loginUserOauth = async (
   next: NextFunction
 ) => {
   try {
-    const { _id }: any = req.user;
-    const user: any = await User.findOne({ _id });
+    res.clearCookie("connect.sid");
+    // From deserialize
+    const id: any = req.user;
+    const user: any = await User.findOne({ _id: id });
 
-    const token = await createJWT(_id);
+    const token = await createJWT(user._id);
     user.tokens = user.tokens.concat({ token });
     await user.save();
 
     res.status(StatusCodes.OK).json({
       username: user.username,
       email: user.email,
-      _id,
+      _id: user._id,
       token,
     });
   } catch (error) {
@@ -115,19 +117,23 @@ export const logoutUser = async (
   next: NextFunction
 ) => {
   try {
-    console.log("loggin out");
     const user = res.locals.user;
-    console.log("res.cookie", res.cookie);
-    res.cookie("session", "none", {
-      expires: new Date(Date.now() + 5 * 1000),
-    });
-    console.log("loggin out");
+
     user.tokens = user.tokens.filter((token: any) => {
       return token.token !== res.locals.token;
     });
     await res.locals.user.save();
-    res.status(StatusCodes.OK).json({
-      message: `${user.username} logged out`,
+
+    req.logout(function (err) {
+      res.locals.user = null;
+
+      if (err) {
+        return next(err);
+      }
+
+      req.session.destroy(function (err) {
+        res.redirect("/");
+      });
     });
   } catch (error) {
     res.status(StatusCodes.BAD_REQUEST).send(error);
@@ -144,8 +150,9 @@ export const logoutUserAll = async (
 
     user.tokens = [];
     await res.locals.user.save();
-    res.status(StatusCodes.OK).json({
-      message: `${user.username} logged out`,
+
+    req.session.destroy(() => {
+      res.redirect("/");
     });
   } catch (error) {
     res.status(StatusCodes.BAD_REQUEST).send(error);

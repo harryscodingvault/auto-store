@@ -19,7 +19,7 @@ router.route("/login/success").get(loginUserOauth);
 
 router
   .route("/login/google")
-  .get(passport.authenticate("google", { scope: ["email", "profile"] }));
+  .get(passport.authenticate("google", { scope: ["profile", "email"] }));
 
 router.route("/google/callback").get(
   passport.authenticate("google", {

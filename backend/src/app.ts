@@ -8,7 +8,7 @@ import passport from "passport";
 import helmet from "helmet";
 //PASSPORT IMPORTS
 import "./auth/passportGoogleSSO";
-import cookieSession from "cookie-session";
+import session from "express-session";
 //ROUTES IMPORTS
 import AuthRouter from "./routes/authRoutes";
 import ProposalRouter from "./routes/proposalRoutes";
@@ -34,10 +34,10 @@ app.use(express.json());
 
 //PASSPORT
 app.use(
-  cookieSession({
-    name: "session",
-    keys: [`${process.env.COOKIE_KEY}`],
-    maxAge: 24 * 60 * 60 * 1000,
+  session({
+    secret: `${process.env.COOKIE_KEY}`,
+    resave: false,
+    saveUninitialized: false,
   })
 );
 app.use(passport.initialize());
