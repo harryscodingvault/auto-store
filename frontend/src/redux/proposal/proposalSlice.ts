@@ -7,7 +7,6 @@ import {
   removeUserFromLocalStorage,
 } from "../../utils/localStorage";
 import { getAllProposals } from "../allProposals/allProposalsSlice";
-import { logoutUser } from "../user/userSlice";
 
 const initialState = {
   isLoading: false,

@@ -115,8 +115,13 @@ export const logoutUser = async (
   next: NextFunction
 ) => {
   try {
+    console.log("loggin out");
     const user = res.locals.user;
-
+    console.log("res.cookie", res.cookie);
+    res.cookie("session", "none", {
+      expires: new Date(Date.now() + 5 * 1000),
+    });
+    console.log("loggin out");
     user.tokens = user.tokens.filter((token: any) => {
       return token.token !== res.locals.token;
     });

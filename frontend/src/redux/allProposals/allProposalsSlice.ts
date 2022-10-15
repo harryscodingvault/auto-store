@@ -2,8 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import originAPI, { checkForUnauthorizedResponse } from "../../utils/api";
 import authHeader from "../../utils/authHeader";
 
-import { logoutUser } from "../user/userSlice";
-
 const initialFilterState = {
   search: "",
   sort: "latest",

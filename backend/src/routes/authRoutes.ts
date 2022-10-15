@@ -7,8 +7,6 @@ import {
   logoutUser,
 } from "../controllers/authController";
 import { authenticateUser } from "../middleware/auth";
-import { createJWT } from "../utils/jwtHandler";
-import { StatusCodes } from "http-status-codes";
 
 const router = express.Router();
 

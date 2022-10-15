@@ -1,7 +1,8 @@
+import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../../redux/user/userSlice";
+import { loginUser, loginUserOauth2 } from "../../redux/user/userSlice";
 import { Wrapper } from "./Landing.style";
 
 const Landing = () => {
@@ -9,8 +10,6 @@ const Landing = () => {
   const { isLoading, user } = useSelector((store: any) => store.user);
   const { sharedProposal } = useSelector((store: any) => store.proposal);
   const dispatch = useDispatch();
-  const [thisUser, setThisUser] = useState(null);
-  console.log(thisUser);
 
   useEffect(() => {
     if (sharedProposal.id && user) {
@@ -21,27 +20,7 @@ const Landing = () => {
   }, []);
 
   useEffect(() => {
-    const getUser = () => {
-      fetch("http://localhost:5000/api/auth/login/success", {
-        method: "GET",
-        credentials: "include",
-        //@ts-ignore
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Credentials": true,
-        },
-      })
-        .then((response) => {
-          if (response.status === 200) return response.json();
-          throw new Error("Authentication failed");
-        })
-        .then((resObj) => {
-          setThisUser(resObj.user);
-        })
-        .catch((err) => console.log(err));
-    };
-    getUser();
+    dispatch(loginUserOauth2());
   }, []);
 
   const openGoogleAuth = async () => {

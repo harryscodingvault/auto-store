@@ -15,10 +15,31 @@ const initialState = {
 };
 
 export const loginUser: any = createAsyncThunk(
-  "user/registerUser",
+  "user/loginUser",
   async (user, thunkAPI) => {
     try {
       const resp = await originAPI.post("auth/login", user);
+
+      return resp.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response.data.error);
+    }
+  }
+);
+
+export const loginUserOauth2: any = createAsyncThunk(
+  "user/loginUser",
+  async (_, thunkAPI) => {
+    try {
+      const resp = await originAPI.get("auth/login/success", {
+        withCredentials: true,
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Credentials": true,
+        },
+      });
+
       return resp.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response.data.error);
@@ -27,22 +48,10 @@ export const loginUser: any = createAsyncThunk(
 );
 
 export const registerUser: any = createAsyncThunk(
-  "user/loginUser",
-  async (user, thunkAPI) => {
+  "user/registerUser",
+  async (user, thunkAPI: any) => {
     try {
       const resp = await originAPI.post("auth/signup", user);
-      return resp.data;
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.response.data.error);
-    }
-  }
-);
-
-export const logoutUser: any = createAsyncThunk(
-  "user/logoutUser",
-  async (_, thunkAPI) => {
-    try {
-      const resp = await originAPI.post("auth/signup", authHeader(thunkAPI));
       return resp.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response.data.error);
@@ -57,6 +66,22 @@ export const editUser: any = createAsyncThunk(
       const resp = await originAPI.patch("user/me", user, authHeader(thunkAPI));
       return resp.data;
     } catch (error: any) {
+      return checkForUnauthorizedResponse(error, thunkAPI);
+    }
+  }
+);
+
+export const logoutUser: any = createAsyncThunk(
+  "user/logoutUser",
+  async (_, thunkAPI: any) => {
+    try {
+      const token = thunkAPI.getState().user.user.token;
+      console.log(token);
+      const resp = await originAPI.post("auth/logout", _, authHeader(thunkAPI));
+      console.log(resp.data);
+      return resp.data;
+    } catch (error: any) {
+      console.log(error);
       return checkForUnauthorizedResponse(error, thunkAPI);
     }
   }
@@ -78,7 +103,7 @@ export const clearStore: any = createAsyncThunk(
   "user/clearStore",
   async (_, thunkAPI: any) => {
     try {
-      thunkAPI.dispatch(logoutUser());
+      // thunkAPI.dispatch(logoutUser());
       thunkAPI.dispatch(clearAllProposalsState());
       thunkAPI.dispatch(clearAllValues());
       return Promise.resolve();
@@ -92,7 +117,9 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    clearAllValues: (state) => initialState,
+    clearAllValues: (state) => {
+      state = initialState;
+    },
   },
   extraReducers: {
     //REGISTER USER
@@ -141,9 +168,9 @@ const userSlice = createSlice({
       state.isLoading = true;
     },
     [deleteUser.fulfilled]: (state) => {
+      removeUserFromLocalStorage();
       state.isLoading = false;
       state.user = null;
-      removeUserFromLocalStorage();
     },
     [deleteUser.rejected]: (state, { payload }) => {
       state.isLoading = false;
@@ -152,13 +179,11 @@ const userSlice = createSlice({
     //LOGOUT USER
     [logoutUser.pending]: (state) => {
       state.isLoading = true;
-      state.user = null;
-      removeUserFromLocalStorage();
     },
-    [logoutUser.fulfilled]: (state) => {
+    [logoutUser.fulfilled]: (state, { payload }) => {
+      //removeUserFromLocalStorage();
       state.isLoading = false;
-      state.user = null;
-      removeUserFromLocalStorage();
+      //state.user = null;
     },
     [logoutUser.rejected]: (state, { payload }) => {
       state.isLoading = false;
